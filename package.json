@@ -1,0 +1,24 @@
+{
+  "name": "mifa",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "gitart-scroll-carousel": "^1.2.4",
+    "i": "^0.3.7",
+    "primeflex": "^3.3.0",
+    "primeicons": "^6.0.1",
+    "primevue": "^3.27.0",
+    "vue": "^3.2.47",
+    "vue-router": "^4.1.6",
+    "vue-ssr-carousel": "^2.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.0.0",
+    "vite": "^4.1.4"
+  }
+}
