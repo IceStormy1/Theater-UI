@@ -10,7 +10,11 @@ import "primevue/resources/primevue.min.css"; //core CSS
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+
 createApp(App)
     .use(router)
     .use(PrimeVue)
+    .use(VueAxios, axios)
     .mount("#app");
