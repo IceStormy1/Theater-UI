@@ -27,10 +27,22 @@ export default {
     }
   },
   methods: {
-    getWorkerList() {
-      this.axios.get('https://3a6e-91-196-232-53.ngrok-free.app/api/workers', {headers: {'Content-Type': 'application/json', 'mode': 'no-cors','Access-Control-Allow-Origin': '*', 'sec-fetch-mode': 'no-cors'}}).then((response) => {
-        console.log(response.data)
-      })
+    async getWorkerList() {
+      try {
+        const response = await fetch('https://3a6e-91-196-232-53.ngrok-free.app/api/workers', {
+          mode: 'no-cors',
+          headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, PUT, POST, DELETE, OPTIONS',
+            'Access-Control-Allow-Headers': 'Content-Type'
+          }
+        });
+        const data = await response.json();
+        console.log(data);
+      } catch (error) {
+        console.error(error);
+      }
     }
   },
   mounted() {
