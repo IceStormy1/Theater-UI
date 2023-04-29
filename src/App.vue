@@ -1,38 +1,54 @@
 <template>
   <div>
-    <Menubar class="p-mb-3" :model="items"/>
+    <Menubar class="p-mb-3" :model="items"></Menubar>
   </div>
-  <router-view/>
-</template>
 
+  <div class="container">
+    <router-view />
+  </div>
+
+</template>
 
 <script>
 import Menubar from "primevue/menubar";
 
-// export default defineComponent({
-
-
-// <script lang="ts">
-// import { defineComponent } from "vue";
-// import Button from 'primevue/button';
-//
-// export default defineComponent({
-//   name: "Home",
-//   components: {
-//     Button
-//   },
-// });
-
 export default {
   components: {
     Menubar: Menubar
+  },
+  methods: {
+    logOut() {
+      this.$store.dispatch('auth/logout');
+      this.$router.push('/login');
+    }
+  },
+  computed: {
+    currentUser() {
+
+      return this.$store.state.auth.user != null;
+    },
   },
   mounted() {
     this.items = [
       {
         label: 'Главная',
         to   : "/",
-      }
+      },
+      {
+        label: 'Регистрация',
+        to   : "/register",
+        visible: () => !this.currentUser,
+      },
+      {
+        label: 'Войти',
+        to   : "/login",
+        visible: () => !this.currentUser,
+      },
+      {
+        label: 'Выйти',
+        command : () => this.logOut(),
+        visible: () => this.currentUser,
+      },
     ];
   },
   data() {
