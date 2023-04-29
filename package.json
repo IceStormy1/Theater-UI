@@ -17,7 +17,9 @@
     "vue": "^3.2.47",
     "vue-axios": "^3.5.2",
     "vue-router": "^4.1.6",
-    "vue-ssr-carousel": "^2.2.0"
+    "vue-ssr-carousel": "^2.2.0",
+    "uikit": "^3.9.3",
+    "vue-toastification": "^2.0.0-rc.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
