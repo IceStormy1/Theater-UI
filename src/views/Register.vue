@@ -5,7 +5,7 @@
           id="profile-img"
           src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
           class="profile-img-card"
-       alt=""/>
+          alt=""/>
 
       <form class="flex flex-column gap-2" name="form" @submit.prevent="handleRegister">
 
@@ -51,17 +51,17 @@
         </span>
 
         <span class="p-float-label" id="test">
-            <Calendar v-model="user.birthDate" :minDate="minDate" :maxDate="maxDate" :manualInput="false" inputId="birth_date" />
+            <Calendar v-model="user.birthDate" :minDate="minDate" :maxDate="maxDate" :manualInput="false" inputId="birth_date"/>
             <label for="birth_date">Дата рождения</label>
         </span>
 
         <span class="p-float-label" id="test">
-            <InputNumber v-model="user.phone" placeholder="+7 (999) 999-99-99" inputId="phone" ></InputNumber>
+            <InputNumber v-model="user.phone" placeholder="+7 (999) 999-99-99" inputId="phone"></InputNumber>
           <label for="phone">Номер телефона</label>
         </span>
 
         <span class="p-float-label" id="test">
-           <Dropdown v-model="user.gender" :options="genders" showClear optionLabel="name" class="w-full md:w-12rem" inputId="gender" />
+           <Dropdown v-model="user.gender" :options="genders" showClear optionLabel="name" class="w-full md:w-12rem" inputId="gender"/>
           <label for="gender">Пол</label>
         </span>
 
@@ -82,18 +82,19 @@ import InputText from 'primevue/inputtext';
 import Calendar from 'primevue/Calendar';
 import Dropdown from 'primevue/dropdown';
 import InputMask from 'primevue/inputmask';
-import InputNumber  from 'primevue/inputnumber';
+import InputNumber from 'primevue/inputnumber';
 
 import {ref} from 'vue';
 
+// todo mounted
 let today = new Date();
 let year = today.getFullYear();
 
 const minDate = ref(new Date());
 const maxDate = ref(new Date());
 const genders = ref([
-  { name: 'Мужской', code: 1 },
-  { name: 'Женский', code: 2 },
+  {name: 'Мужской', code: 1},
+  {name: 'Женский', code: 2},
 ]);
 
 minDate.value.setMonth(1);
@@ -114,13 +115,13 @@ export default {
     };
   },
   components: {
-    Password: Password,
-    Button: Button,
-    InputText: InputText,
-    Calendar : Calendar,
-    Dropdown  : Dropdown ,
-    InputMask  : InputMask ,
-    InputNumber  : InputNumber ,
+    Password,
+    Button,
+    InputText,
+    Calendar,
+    Dropdown,
+    InputMask,
+    InputNumber,
   },
   computed: {
     loggedIn() {
@@ -143,15 +144,17 @@ export default {
           error => {
             this.loading = false;
             console.log(error.response)
-            let errorMessage =  error.response.data.errors == null ? error.response.data.title : Object.values(error.response.data.errors)[0][0]
+            // todo переделать красиво
+            let errorMessage = error.response.data.errors == null ? error.response.data.title : Object.values(error.response.data.errors)[0][0]
 
-             alert(errorMessage)
+            alert(errorMessage)
           }
       );
     }
   }
 };
 </script>
+<!--todo стили в отдельный файл-->
 
 <style scoped>
 label {

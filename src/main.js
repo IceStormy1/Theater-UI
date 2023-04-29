@@ -9,8 +9,6 @@ import "primevue/resources/themes/saga-blue/theme.css"; //theme
 import "primevue/resources/primevue.min.css"; //core CSS
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
-// import 'bootstrap';
-// import 'bootstrap/dist/css/bootstrap.min.css';
  import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {library} from '@fortawesome/fontawesome-svg-core';
 import {

@@ -5,7 +5,7 @@
           id="profile-img"
           src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
           class="profile-img-card"
-       alt=""/>
+          alt=""/>
 
       <form class="flex flex-column gap-2" name="form" @submit.prevent="handleLogin">
 
@@ -19,7 +19,7 @@
             <label for="password">Пароль</label>
         </span>
 
-        <Button class="buttonLogin" type="submit" label="Войти"  :loading="loading" @click="load" />
+        <Button class="buttonLogin" type="submit" label="Войти" :loading="loading" @click="load"/>
       </form>
 
     </div>
@@ -32,6 +32,7 @@ import User from '../models/user';
 import Password from 'primevue/password';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
+// import '/src/assets/auth.css'
 
 import {ref} from 'vue';
 
@@ -47,9 +48,9 @@ export default {
     };
   },
   components: {
-    Password: Password,
-    Button: Button,
-    InputText: InputText,
+    Password,
+    Button,
+    InputText,
   },
   computed: {
     loggedIn() {

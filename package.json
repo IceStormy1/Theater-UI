@@ -13,7 +13,6 @@
     "@fortawesome/vue-fontawesome": "^3.0.3",
     "@popperjs/core": "^2.11.7",
     "axios": "^1.3.6",
-    "bootstrap": "^5.2.3",
     "core-js": "^3.30.1",
     "gitart-scroll-carousel": "^1.2.4",
     "i": "^0.3.7",
