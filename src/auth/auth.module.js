@@ -1,6 +1,6 @@
 import AuthService from '../services/auth/auth.service';
 
-let user = localStorage.getItem('accessToken');
+let user = localStorage.getItem('user');
 let initialState = user
     ? { status: { loggedIn: true }, user: user }
     : { status: { loggedIn: false }, user: null };

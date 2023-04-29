@@ -56,7 +56,7 @@
         </span>
 
         <span class="p-float-label" id="test">
-            <InputNumber v-model="user.phone"  placeholder="+7 (999) 999-99-99" inputId="phone" ></InputNumber>
+            <InputNumber v-model="user.phone" placeholder="+7 (999) 999-99-99" inputId="phone" ></InputNumber>
           <label for="phone">Номер телефона</label>
         </span>
 
@@ -142,8 +142,10 @@ export default {
           },
           error => {
             this.loading = false;
-             console.log(Object.values(error.response.data.errors)[0]);
-             alert(Object.values(error.response.data.errors)[0][0])
+            console.log(error.response)
+            let errorMessage =  error.response.data.errors == null ? error.response.data.title : Object.values(error.response.data.errors)[0][0]
+
+             alert(errorMessage)
           }
       );
     }

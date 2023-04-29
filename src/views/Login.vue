@@ -53,7 +53,7 @@ export default {
   },
   computed: {
     loggedIn() {
-      return localStorage.getItem('accessToken') !== null;
+      return localStorage.getItem('user') !== null;
     }
   },
   methods: {

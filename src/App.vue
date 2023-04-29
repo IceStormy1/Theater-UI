@@ -24,7 +24,6 @@ export default {
   },
   computed: {
     currentUser() {
-
       return this.$store.state.auth.user != null;
     },
   },
@@ -45,9 +44,18 @@ export default {
         visible: () => !this.currentUser,
       },
       {
-        label: 'Выйти',
-        command : () => this.logOut(),
+        label: 'Профиль',
         visible: () => this.currentUser,
+        items:[
+          {
+            label: 'Перейти к профилю',
+            command : () => this.$router.push('/profile')
+          },
+          {
+            label: 'Выйти',
+            command : () => this.logOut(),
+          },
+        ]
       },
     ];
   },

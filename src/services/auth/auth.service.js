@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 class AuthService {
-    accessToken;
     baseUrl = 'account/';
+
     login(user) {
         return axios.post( this.baseUrl + 'login',
             {
@@ -10,10 +10,8 @@ class AuthService {
                 password: user.password
                  },)
             .then(response => {
-                if (response.data.accessToken) {
-                    //localStorage.setItem('user', JSON.stringify(response.data));
-
-                    localStorage.setItem('accessToken', response.data.accessToken);
+                if (response.data) {
+                    localStorage.setItem('user', JSON.stringify(response.data));
                 }
 
                 return response.data;
@@ -21,7 +19,7 @@ class AuthService {
     }
 
     logout() {
-        localStorage.removeItem('accessToken');
+        localStorage.removeItem('user');
     }
 
     register(user) {
@@ -33,7 +31,7 @@ class AuthService {
             lastName: user.lastName,
             middleName: user.middleName,
             phone: user.phone,
-            gender: user.gender.code,
+            gender: user.gender?.code,
             birthDate: user.birthDate,
             photoId: user.photoId
         });
