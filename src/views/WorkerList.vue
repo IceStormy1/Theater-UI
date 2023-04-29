@@ -104,17 +104,6 @@ export default {
   },
   methods: {
     sendMessage() {
-      // const formData = new FormData();
-      //
-      // formData.append('firstName', this.$data.firstName)
-      // formData.append('lastname', this.$data.lastname)
-      // formData.append('middleName', this.$data.middleName)
-      // formData.append('gender', this.$data.gender)
-      // formData.append('birthdate', this.$data.birthdate)
-      // formData.append('description', this.$data.description)
-      // formData.append('positionId', this.$data.positionId)
-      // formData.append('positionType', this.$data.positionType)
-
       axios.post('http://localhost:5010/api/admin/theaterworker', {
         firstName: this.$data.firstName,
         lastName: this.$data.lastname,
