@@ -23,9 +23,22 @@ import './axios';
 
 library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt);
 
+import 'uikit/dist/css/uikit.min.css';
+
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
+
+
+import 'uikit';
+
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+
 createApp(App)
     .component('font-awesome-icon', FontAwesomeIcon)
     .use(router)
     .use(store)
     .use(PrimeVue)
+    .use(Toast)
+    .use(VueAxios, axios)
     .mount("#app");
