@@ -8,13 +8,13 @@
       <h2 class="uk-modal-title">Создание должности</h2>
 
       <div class="flex flex-column gap-2">
-        <label for="positionName">Название позиции </label>
+        <label for="positionName">Название должности</label>
         <InputText id="positionName" v-model="creatingPosition.positionName" />
         <small id="username-help">Введите название должности</small>
       </div>
 
       <div class="flex flex-column gap-2">
-        <label for="positionType">Название типа позиции</label>
+        <label for="positionType">Название типа должности</label>
         <InputText id="positionType" v-model="creatingPosition.positionType" />
         <small id="username-help">Введите название типа должности</small>
       </div>
