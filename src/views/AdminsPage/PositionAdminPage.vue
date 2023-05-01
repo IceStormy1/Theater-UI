@@ -33,7 +33,7 @@
     <Column field="positionType" header="Тип должности"></Column>
     <Column header="Действия">
       <template #body="{data}">
-        <button class="uk-button uk-button-primary" @click="loadEditPosition(data.id, data.positionName, data.positionType)" uk-toggle="target: #modal-edit">Редактировать</button>
+        <button class="uk-button uk-button-primary" @click="loadEditPosition(data.id, data.positionName, data.positionType)" uk-toggle="target: #modal-edit-positiont">Редактировать</button>
         <button class="uk-button uk-button-danger" @click="deletePosition(data.id)" style="margin-left: 10px;">Удалить</button>
       </template>
     </Column>
@@ -41,20 +41,18 @@
 
 
   <!-- Модальное окно редактирования сотрудника -->
-  <div id="modal-edit" uk-modal ref="modal-edit">
+  <div id="modal-edit-positiont" uk-modal ref="modal-edit">
     <div class="uk-modal-dialog uk-modal-body">
-      <h2 class="uk-modal-title">Редактирование сотрудника</h2>
+      <h2 class="uk-modal-title">Редактирование должности</h2>
 
       <div class="flex flex-column gap-2">
         <label for="username">id должности</label>
         <InputText disabled id="username" v-model="editablePositions.id"/>
-        <small id="username-help">Можете изменить имя пользователя, не трогайте поле если не хотите менять</small>
       </div>
 
       <div class="flex flex-column gap-2">
         <label for="username">Название должности</label>
         <InputText id="username" v-model="editablePositions.positionName"/>
-        <small id="username-help">Можете изменить имя пользователя, не трогайте поле если не хотите менять</small>
       </div>
 
       <div class="flex flex-column gap-2">

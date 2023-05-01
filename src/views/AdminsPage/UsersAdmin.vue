@@ -38,7 +38,7 @@
     <Column field="birthDate" header="Дата рождения"></Column>
     <Column header="Действия">
       <template #body="{data}">
-        <button class="uk-button uk-button-primary" @click="loadEditUser(data.id)" uk-toggle="target: #modal-edit">Редактировать</button>
+        <button class="uk-button uk-button-primary" @click="loadEditUser(data.id)" uk-toggle="target: #modal-edit-users">Редактировать</button>
         <button class="uk-button uk-button-danger" @click="deleteUser(data.id)" style="margin-left: 10px;">Удалить</button>
       </template>
     </Column>
@@ -46,7 +46,7 @@
 
 
   <!-- Модальное окно редактирования сотрудника -->
-  <div id="modal-edit" uk-modal ref="modal-edit">
+  <div id="modal-edit-users" uk-modal ref="modal-edit">
     <div class="uk-modal-dialog uk-modal-body">
       <h2 class="uk-modal-title">Редактирование пользователя</h2>
 

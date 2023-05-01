@@ -69,7 +69,7 @@
     <Column field="positionTypeName" header="Quantity"></Column>
     <Column header="Actions">
       <template #body="{data}">
-        <button class="uk-button uk-button-primary" @click="loadEditWorker(data.id)" uk-toggle="target: #modal-edit">Редактировать</button>
+        <button class="uk-button uk-button-primary" @click="loadEditWorker(data.id)" uk-toggle="target: #modal-edit-worker">Редактировать</button>
         <button class="uk-button uk-button-danger" @click="deleteWorker(data.id)" style="margin-left: 10px;">Удалить</button>
       </template>
     </Column>
@@ -77,7 +77,7 @@
 
 
   <!-- Модальное окно редактирования сотрудника -->
-  <div id="modal-edit" uk-modal ref="modal-edit">
+  <div id="modal-edit-worker" uk-modal ref="modal-edit-worker">
     <div class="uk-modal-dialog uk-modal-body">
       <h2 class="uk-modal-title">Редактирование сотрудника</h2>
 
