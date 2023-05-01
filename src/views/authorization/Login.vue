@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import User from '../models/user';
+import User from '../../models/user';
 import Password from 'primevue/password';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
