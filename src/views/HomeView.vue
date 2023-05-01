@@ -1,122 +1,236 @@
 <template>
-  <DataView :value="products" :layout="layout">
-    <template #header>
-      <div class="flex justify-content-end">
-        <DataViewLayoutOptions v-model="layout" />
-      </div>
-    </template>
 
-    <template #list="slotProps">
-      <div class="col-12">
-        <div class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4">
-          <img class="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" src="/demo/images/123.png" :alt="slotProps.data.name" />
-          <div class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
-            <div class="flex flex-column align-items-center sm:align-items-start gap-3">
-              <div class="text-2xl font-bold text-900">{{ slotProps.data.name }}</div>
-              <Rating :modelValue="slotProps.data.rating" readonly :cancel="false"></Rating>
-              <div class="flex align-items-center gap-3">
-                            <span class="flex align-items-center gap-2">
-                                <i class="pi pi-tag"></i>
-                                <span class="font-semibold">{{ slotProps.data.category }}</span>
-                            </span></div>
-            </div>
-            <div class="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
-              <span class="text-2xl font-semibold">${{ slotProps.data.price }}</span>
-              <Button icon="pi pi-shopping-cart" rounded :disabled="slotProps.data.inventoryStatus === 'OUTOFSTOCK'"></Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </template>
+  <div class="uk-slider-container-offset" uk-slider="center: true">
 
-    <template #grid="slotProps">
-      <div class="col-12 sm:col-6 lg:col-12 xl:col-4 p-2">
-        <div class="p-4 border-1 surface-border surface-card border-round">
-          <div class="flex flex-wrap align-items-center justify-content-between gap-2">
-            <div class="flex align-items-center gap-2">
-              <i class="pi pi-tag"></i>
-              <span class="font-semibold">{{ slotProps.data.category }}</span>
+    <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1">
+
+      <ul class="uk-slider-items uk-child-width-auto@m uk-grid">
+
+        <li v-for="item in piecesOnSlider" class="w-5">
+          <div class="uk-card uk-card-default ">
+            <div class="uk-card-body uk-flex uk-flex-between">
+
+              <v-img
+                  cover
+                  height="400"
+                  :src="item.mainPicture.directUrl"
+              ></v-img>
+
+              <div class="uk-card-body w-5">
+                <p>Актеры спектакля:</p>
+                <ul>
+                  <li v-for="actors in getWorkersByPositionType(item.workerShortInformation, 'Actor')">
+                    {{ actors.fullName }}
+                  </li>
+                </ul>
+                <p>Режиссер:</p>
+                <ul>
+                  <li v-for="producer in getWorkersByPositionType(item.workerShortInformation, 'Producer')">
+                    {{ producer.fullName }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div>
+              <a><h3 class="uk-card-title hover:bg-yellow-400 uk-width-auto@m" @click="onClickb(item.id)">
+                {{ item.pieceName }}</h3></a>
+              <p>{{ item.shortDescription }}</p>
             </div>
           </div>
-          <div class="flex flex-column align-items-center gap-3 py-5">
-            <img class="w-9 shadow-2 border-round" src="/demo/images/123.png" :alt="slotProps.data.name" />
-            <div class="text-2xl font-bold">{{ slotProps.data.name }}</div>
-            <Rating value="{product.rating}" readonly :cancel="false"></Rating>
-          </div>
-          <div class="flex align-items-center justify-content-between">
-            <span class="text-2xl font-semibold">${{ slotProps.data.price }}</span>
-            <Button icon="pi pi-shopping-cart" rounded :disabled="slotProps.data.inventoryStatus === 'OUTOFSTOCK'"></Button>
-          </div>
-        </div>
+        </li>
+
+      </ul>
+
+      <a class="uk-position-center-left  uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous
+         uk-slider-item="previous"></a>
+      <a class="uk-position-center-right  uk-position-small uk-hidden-hover" href="#" uk-slidenav-next
+         uk-slider-item="next"></a>
+
+    </div>
+
+    <ul class="uk-slider-nav uk-dotnav uk-flex-center uk-margin"></ul>
+
+  </div>
+
+  <div class="uk-child-width-expand@s uk-text-center" uk-grid>
+    <div></div>
+    <div class="uk-card uk-card-body">
+      <div id="app" style="max-width: 650px;">
+        <vue-inline-calendar width="400"
+                             @click="onClickf($event)"
+                             @update:selected-date="onClickf($event)"
+                             :locale="ru-ru"
+                             :showYear="false"
+                             :disablePastDays="true"/>
       </div>
-    </template>
-  </DataView>
+    </div>
+    <div></div>
+  </div>
+
+  <h1 v-if="piecesOnDate.length === 0">На выбранную дату ничего не найдено</h1>
+
+<div class="uk-grid-collapse uk-child-width-expand@s uk-flex uk-flex-center" uk-grid>
+    <v-card
+        v-for="pieceD in piecesOnDate"
+        class="mx-6"
+        max-width="400"
+    >
+
+      <v-img
+          cover
+          height="250"
+          :src="pieceD.mainPicture.directUrl"
+      ></v-img>
+
+      <v-card-item>
+        <v-card-title>{{pieceD.pieceName}}</v-card-title>
+
+        <v-card-subtitle>
+          <span class="me-1">{{pieceD.pieceGenre}}</span>
+
+          <v-icon
+              color="error"
+              icon="mdi-fire-circle"
+              size="small"
+          ></v-icon>
+        </v-card-subtitle>
+      </v-card-item>
+
+      <v-card-text>
+        <v-row
+            align="center"
+            class="mx-0"
+        >
+          <v-rating
+              :model-value="4.5"
+              color="amber"
+              density="compact"
+              half-increments
+              readonly
+              size="small"
+          ></v-rating>
+        </v-row>
+
+        <div>{{pieceD.shortDescription}}</div>
+      </v-card-text>
+
+      <v-divider class="mx-4 mb-1"></v-divider>
+
+      <v-card-title>Предстоящие даты</v-card-title>
+
+      <div class="px-4">
+        <v-chip-group v-model="selection">
+          <v-chip v-for="pieceDate in pieceD.pieceDates">{{formatDate(pieceDate.date, 'DD.MM HH:mm')}}</v-chip>
+        </v-chip-group>
+      </div>
+
+      <v-card-actions>
+        <v-btn
+            color="deep-purple-lighten-2"
+            variant="text"
+            @click="onClickb(pieceD.id)"
+        >
+          Подробнее
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+
+</div>
 </template>
 
 <script>
+
+import VueInlineCalendar from 'vue-inline-calendar';
+import "vue-inline-calendar/dist/style.css";
+
 import Button from "primevue/button";
 import Card from 'primevue/card';
 import DataView from 'primevue/dataview';
 import DataViewLayoutOptions from 'primevue/dataviewlayoutoptions'
+import Carousel from 'primevue/carousel'
+import axios from "axios";
+import dayjs from 'dayjs';
 
 export default {
   components: {
     Card: Card,
     Button: Button,
     DataViewLayoutOptions: DataViewLayoutOptions,
-    DataView: DataView
+    DataView: DataView,
+    Carousel,
+    VueInlineCalendar
   },
   data() {
     return {
+      selectedDate: null,
       layout: 'grid',
-      products: [],
+      piecesOnSlider: [],
+      piecesOnDate: () => this.onClickf(),
+      responsiveOptions: [
+        {
+          breakpoint: '767px',
+          numVisible: 1,
+          numScroll: 1
+        }
+      ]
     }
   },
-  mounted() {
-    this.products = [
-      {
-        name : 123,
-        price: 123,
-        inventoryStatus: 'OUTOFSTOCK',
-        category: 'sex',
-        rating: 123
-      },
-      {
-        name : 123,
-        price: 123,
-        inventoryStatus: 'OUTOFSTOCK',
-        category: 'sex',
-        rating: 123
-      },
-      {
-        name : 123,
-        price: 123,
-        inventoryStatus: 'OUTOFSTOCK',
-        category: 'sex',
-        rating: 123
-      },
-      {
-        name : 123,
-        price: 123,
-        inventoryStatus: 'OUTOFSTOCK',
-        category: 'sex',
-        rating: 123
-      },
-      {
-        name : 123,
-        price: 123,
-        inventoryStatus: '213',
-        category: 'sex',
-        rating: 123
-      },
-      {
-        name : 123,
-        price: 123,
-        inventoryStatus: 'OUTOFSTOCK',
-        category: 'sex',
-        rating: 123
-      },
-    ];
+  methods: {
+    onClickb(spectacleId) {
+      this.$router.push('/spectacle/' + spectacleId);
+    },
+    onClickf(event) {
+      this.selectedDate = event;
+
+      axios.get('piece',
+          {
+            params: {
+              limit: 10,
+              sortColumn: 'name',
+              sortOrder: 0,
+              date: this.selectedDate
+            }
+          })
+          .then(response => {
+            this.piecesOnDate = response.data.items;
+          });
+    },
+
+    getWorkersByPositionType(workerShortInformation, positionType) {
+      let actors = [];
+
+      workerShortInformation.forEach(x => {
+        console.log(x)
+        if (x.positionType === positionType)
+          actors.push(x);
+      });
+
+      return actors;
+    },
+
+    formatDate(dateString, format){
+      console.log(dateString);
+      const date = dayjs(dateString);
+      // Then specify how you want your dates to be formatted
+      return date.format(format);
+    }
   },
-}
+
+  mounted() {
+    axios.get('piece',
+        {
+          params: {
+            limit: 10,
+            sortColumn: 'name',
+            sortOrder: 0
+          }
+        })
+        .then(response => {
+          this.piecesOnSlider = response.data.items;
+        });
+  },
+};
 </script>
+
+<style>
+</style>
