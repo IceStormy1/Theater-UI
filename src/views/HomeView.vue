@@ -1,56 +1,48 @@
 <template>
-  <DataView :value="products" :layout="layout">
-    <template #header>
-      <div class="flex justify-content-end">
-        <DataViewLayoutOptions v-model="layout" />
-      </div>
-    </template>
 
-    <template #list="slotProps">
-      <div class="col-12">
-        <div class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4">
-          <img class="w-9 sm:w-16rem xl:w-10rem shadow-2 block xl:block mx-auto border-round" src="/demo/images/123.png" :alt="slotProps.data.name" />
-          <div class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
-            <div class="flex flex-column align-items-center sm:align-items-start gap-3">
-              <div class="text-2xl font-bold text-900">{{ slotProps.data.name }}</div>
-              <Rating :modelValue="slotProps.data.rating" readonly :cancel="false"></Rating>
-              <div class="flex align-items-center gap-3">
-                            <span class="flex align-items-center gap-2">
-                                <i class="pi pi-tag"></i>
-                                <span class="font-semibold">{{ slotProps.data.category }}</span>
-                            </span></div>
-            </div>
-            <div class="flex sm:flex-column align-items-center sm:align-items-end gap-3 sm:gap-2">
-              <span class="text-2xl font-semibold">${{ slotProps.data.price }}</span>
-              <Button icon="pi pi-shopping-cart" rounded :disabled="slotProps.data.inventoryStatus === 'OUTOFSTOCK'"></Button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </template>
+  <div class="uk-slider-container-offset" uk-slider="center: true">
 
-    <template #grid="slotProps">
-      <div class="col-12 sm:col-6 lg:col-12 xl:col-4 p-2">
-        <div class="p-4 border-1 surface-border surface-card border-round">
-          <div class="flex flex-wrap align-items-center justify-content-between gap-2">
-            <div class="flex align-items-center gap-2">
-              <i class="pi pi-tag"></i>
-              <span class="font-semibold">{{ slotProps.data.category }}</span>
+    <div class="uk-position-relative uk-visible-toggle uk-light" tabindex="-1">
+
+      <ul class="uk-slider-items uk-child-width-auto@m uk-grid">
+
+        <li v-for="item in products" class="w-5">
+          <div class="uk-card uk-card-default ">
+            <div class="uk-card-body uk-flex uk-flex-between">
+
+              <img :src="item.mainPicture.directUrl" width="400" max-height="400" alt="123">
+
+              <div class="uk-card-body w-5">
+                <p>Актеры спектакля:</p>
+                <ul>
+                  <li v-for="actors in getWorkersByPositionType(item.workerShortInformation, 'Actor')">{{ actors.fullName }}</li>
+                </ul>
+                <p>Режиссер:</p>
+                <ul>
+                  <li v-for="producer in getWorkersByPositionType(item.workerShortInformation, 'Producer')">{{ producer.fullName }}</li>
+                </ul>
+              </div>
+            </div>
+            <div>
+             <h3 class="uk-card-title hover:bg-yellow-400 uk-width-auto@m" @click="onClickb(item.id)">{{ item.pieceName }}</h3>
+              <p>{{ item.shortDescription }}</p>
             </div>
           </div>
-          <div class="flex flex-column align-items-center gap-3 py-5">
-            <img class="w-9 shadow-2 border-round" src="/demo/images/123.png" :alt="slotProps.data.name" />
-            <div class="text-2xl font-bold">{{ slotProps.data.name }}</div>
-            <Rating value="{product.rating}" readonly :cancel="false"></Rating>
-          </div>
-          <div class="flex align-items-center justify-content-between">
-            <span class="text-2xl font-semibold">${{ slotProps.data.price }}</span>
-            <Button icon="pi pi-shopping-cart" rounded :disabled="slotProps.data.inventoryStatus === 'OUTOFSTOCK'"></Button>
-          </div>
-        </div>
-      </div>
-    </template>
-  </DataView>
+        </li>
+
+      </ul>
+
+      <a class="uk-position-center-left  uk-position-small uk-hidden-hover" href="#" uk-slidenav-previous
+         uk-slider-item="previous"></a>
+      <a class="uk-position-center-right  uk-position-small uk-hidden-hover" href="#" uk-slidenav-next
+         uk-slider-item="next"></a>
+
+    </div>
+
+    <ul class="uk-slider-nav uk-dotnav uk-flex-center uk-margin"></ul>
+
+  </div>
+
 </template>
 
 <script>
@@ -58,65 +50,64 @@ import Button from "primevue/button";
 import Card from 'primevue/card';
 import DataView from 'primevue/dataview';
 import DataViewLayoutOptions from 'primevue/dataviewlayoutoptions'
+import Carousel from 'primevue/carousel'
+import axios from "axios";
 
 export default {
   components: {
     Card: Card,
     Button: Button,
     DataViewLayoutOptions: DataViewLayoutOptions,
-    DataView: DataView
+    DataView: DataView,
+    Carousel
   },
   data() {
     return {
       layout: 'grid',
       products: [],
+      responsiveOptions: [
+        {
+          breakpoint: '767px',
+          numVisible: 1,
+          numScroll: 1
+        }
+      ]
+    }
+  },
+  methods: {
+    onClickb(spectacleId) {
+      this.$router.push('/spectacle/' + spectacleId);
+    },
+
+    getWorkersByPositionType(workerShortInformation, positionType){
+      let actors = [];
+
+      workerShortInformation.forEach(x=>
+      {
+        console.log(x)
+        if(x.positionType === positionType)
+          actors.push(x);
+      });
+
+      return actors;
     }
   },
   mounted() {
-    this.products = [
-      {
-        name : 123,
-        price: 123,
-        inventoryStatus: 'OUTOFSTOCK',
-        category: 'sex',
-        rating: 123
-      },
-      {
-        name : 123,
-        price: 123,
-        inventoryStatus: 'OUTOFSTOCK',
-        category: 'sex',
-        rating: 123
-      },
-      {
-        name : 123,
-        price: 123,
-        inventoryStatus: 'OUTOFSTOCK',
-        category: 'sex',
-        rating: 123
-      },
-      {
-        name : 123,
-        price: 123,
-        inventoryStatus: 'OUTOFSTOCK',
-        category: 'sex',
-        rating: 123
-      },
-      {
-        name : 123,
-        price: 123,
-        inventoryStatus: '213',
-        category: 'sex',
-        rating: 123
-      },
-      {
-        name : 123,
-        price: 123,
-        inventoryStatus: 'OUTOFSTOCK',
-        category: 'sex',
-        rating: 123
-      },
-    ];
+    axios.get('piece',
+        {
+          params: {
+            limit: 10,
+            sortColumn: 'name',
+            sortOrder: 0
+          }
+        })
+        .then(response =>
+        {
+          this.products = response.data.items;
+        });
   },
-}
+};
 </script>
+
+<style>
+</style>
