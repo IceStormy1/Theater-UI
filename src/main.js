@@ -33,6 +33,7 @@ import 'uikit';
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import Vuex from "vuex";
 
 createApp(App)
     .component('font-awesome-icon', FontAwesomeIcon)
@@ -40,5 +41,6 @@ createApp(App)
     .use(store)
     .use(PrimeVue)
     .use(Toast)
+    .use(Vuex)
     .use(VueAxios, axios)
     .mount("#app");

@@ -28,6 +28,7 @@ export default {
     },
   },
   mounted() {
+    this.userId =  localStorage.getItem('id');
     this.items = [
       {
         label: 'Главная',
@@ -49,7 +50,7 @@ export default {
         items:[
           {
             label: 'Перейти к профилю',
-            command : () => this.$router.push('/profile')
+            command : () => this.$router.push('/profile/' + this.userId)
           },
           {
             label: 'Выйти',
@@ -61,6 +62,7 @@ export default {
   },
   data() {
     return {
+      userId: null,
       items: [],
     }
   }
