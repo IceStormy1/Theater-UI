@@ -124,14 +124,12 @@ export default {
           const toast = useToast();
 
           toast.error('ошибка');
-          console.log(error);
         })
 
-      }).catch(function (error) {
+      }).catch(function () {
         const toast = useToast();
 
         toast.error('ошибка при загрузке фото');
-        console.log(error);
       });
 
 
