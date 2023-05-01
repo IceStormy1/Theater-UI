@@ -43,9 +43,17 @@
 
   </div>
 
+  <div id="app" style="max-width: 400px; max-height: 10px">
+    <vue-inline-calendar @update:selected-date="selectedDate = $event" :locale="ru-ru"	/>
+  </div>
+
 </template>
 
 <script>
+
+import VueInlineCalendar from 'vue-inline-calendar';
+import "vue-inline-calendar/dist/style.css";
+
 import Button from "primevue/button";
 import Card from 'primevue/card';
 import DataView from 'primevue/dataview';
@@ -59,10 +67,12 @@ export default {
     Button: Button,
     DataViewLayoutOptions: DataViewLayoutOptions,
     DataView: DataView,
-    Carousel
+    Carousel,
+    VueInlineCalendar
   },
   data() {
     return {
+      selectedDate: null,
       layout: 'grid',
       products: [],
       responsiveOptions: [
