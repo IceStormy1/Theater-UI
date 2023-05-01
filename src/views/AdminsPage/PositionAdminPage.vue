@@ -10,13 +10,13 @@
       <div class="flex flex-column gap-2">
         <label for="positionName">Название позиции </label>
         <InputText id="positionName" v-model="creatingPosition.positionName" />
-        <small id="username-help">Введите название позиции</small>
+        <small id="username-help">Введите название должности</small>
       </div>
 
       <div class="flex flex-column gap-2">
         <label for="positionType">Название типа позиции</label>
         <InputText id="positionType" v-model="creatingPosition.positionType" />
-        <small id="username-help">Введите название типа позиции</small>
+        <small id="username-help">Введите название типа должности</small>
       </div>
 
 
