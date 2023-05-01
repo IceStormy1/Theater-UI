@@ -10,7 +10,11 @@
           <div class="uk-card uk-card-default ">
             <div class="uk-card-body uk-flex uk-flex-between">
 
-              <img :src="item.mainPicture.directUrl" width="400" max-height="400" alt="123">
+              <v-img
+                  cover
+                  height="400"
+                  :src="item.mainPicture.directUrl"
+              ></v-img>
 
               <div class="uk-card-body w-5">
                 <p>Актеры спектакля:</p>
@@ -63,261 +67,75 @@
     <div></div>
   </div>
 
+  <h1 v-if="piecesOnDate.length === 0">На выбранную дату ничего не найдено</h1>
 
-  <div class="uk-child-width-1-2@m uk-child-width-1-3@l .uk-grid-collapse " uk-height-match=".uk-card-body" uk-grid>
-    <div class="uk-child-width-1-2@m ">
-      <div class="uk-card uk-card-default">
-        <div class="uk-card-media-top">
-          <div class="uk-text-center">
-            <div class="uk-inline-clip uk-transition-toggle" tabindex="0">
-              <img class="uk-transition-scale-up uk-transition-opaque" data-src="/src/assets/examplePiece.jpg" data-width="1000" data-height="667" alt="UIkit cards" uk-img="">
-              <div class="uk-position-center">
-                <span class="uk-transition-fade" uk-icon="icon: plus; ratio: 2"></span>
-              </div>
-            </div>
-          </div>
-          <div class="uk-card-badge uk-label">Новинка</div>
-        </div>
-        <div class="uk-card-body">
-          <h3 class="uk-card-title">Телевизор Panasonic TX-43FR250</h3>
-          <p class="uk-text-truncate">20'' (50 см) Телевизор LED Panasonic 20S30HA102B черный</p>
-          <div class="uk-child-width-auto uk-flex-middle" uk-grid>
-            <div>
-              <span class="uk-text-emphasis uk-text-bold uk-text-large">6 999 р</span>
-            </div>
-            <div>
-              <ul class="uk-iconnav uk-flex-right">
-                <li><a href="#" uk-icon="icon: heart"></a></li>
-                <li><a href="#" uk-icon="icon: comment"></a></li>
-                <li><a href="#" uk-icon="icon: star"></a></li>
-              </ul>
-            </div>
-          </div>
-          <p class="uk-text-small uk-text-muted">100 шт. в наличии</p>
+<div class="uk-grid-collapse uk-child-width-expand@s uk-flex uk-flex-center" uk-grid>
+    <v-card
+        v-for="pieceD in piecesOnDate"
+        class="mx-6"
+        max-width="400"
+    >
 
-        </div>
-        <div class="uk-card-footer">
-          <div class="uk-flex uk-flex-between">
-            <a class="uk-button uk-button-default" href="#">Подробнее</a>
-            <button class="uk-button uk-button-primary uk-text-right">
-              <span uk-icon="icon: cart;"></span>
-            </button>
-          </div>
-        </div>
+      <v-img
+          cover
+          height="250"
+          :src="pieceD.mainPicture.directUrl"
+      ></v-img>
+
+      <v-card-item>
+        <v-card-title>{{pieceD.pieceName}}</v-card-title>
+
+        <v-card-subtitle>
+          <span class="me-1">{{pieceD.pieceGenre}}</span>
+
+          <v-icon
+              color="error"
+              icon="mdi-fire-circle"
+              size="small"
+          ></v-icon>
+        </v-card-subtitle>
+      </v-card-item>
+
+      <v-card-text>
+        <v-row
+            align="center"
+            class="mx-0"
+        >
+          <v-rating
+              :model-value="4.5"
+              color="amber"
+              density="compact"
+              half-increments
+              readonly
+              size="small"
+          ></v-rating>
+        </v-row>
+
+        <div>{{pieceD.shortDescription}}</div>
+      </v-card-text>
+
+      <v-divider class="mx-4 mb-1"></v-divider>
+
+      <v-card-title>Предстоящие даты</v-card-title>
+
+      <div class="px-4">
+        <v-chip-group v-model="selection">
+          <v-chip v-for="pieceDate in pieceD.pieceDates">{{formatDate(pieceDate.date, 'DD.MM HH:mm')}}</v-chip>
+        </v-chip-group>
       </div>
-    </div>
 
-    <div class="uk-child-width-1-2@m">
-      <div class="uk-card uk-card-default">
-        <div class="uk-card-media-top">
-          <div class="uk-text-center">
-            <div class="uk-inline-clip uk-transition-toggle" tabindex="0">
-              <img class="uk-transition-scale-up uk-transition-opaque" data-src="/src/assets/examplePiece.jpg" data-width="1000" data-height="667" alt="UIkit cards" uk-img="">
-              <div class="uk-position-center">
-                <span class="uk-transition-fade" uk-icon="icon: plus; ratio: 2"></span>
-              </div>
-            </div>
-          </div>
-          <div class="uk-card-badge uk-label">Новинка</div>
-        </div>
-        <div class="uk-card-body">
-          <h3 class="uk-card-title">Смартфон SAMSUNG Galaxy A7</h3>
-          <p class="uk-text-truncate">(2018) 64GB Black (SM-A750FN/DS)</p>
-          <div class="uk-child-width-auto uk-flex-middle" uk-grid>
-            <div>
-              <span class="uk-text-emphasis uk-text-bold uk-text-large">21 999 р</span>
-            </div>
-            <div>
-              <ul class="uk-iconnav uk-flex-right">
-                <li><a href="#" uk-icon="icon: heart"></a></li>
-                <li><a href="#" uk-icon="icon: comment"></a></li>
-                <li><a href="#" uk-icon="icon: star"></a></li>
-              </ul>
-            </div>
-          </div>
-          <p class="uk-text-small uk-text-muted">100 шт. в наличии</p>
+      <v-card-actions>
+        <v-btn
+            color="deep-purple-lighten-2"
+            variant="text"
+            @click="onClickb(pieceD.id)"
+        >
+          Подробнее
+        </v-btn>
+      </v-card-actions>
+    </v-card>
 
-        </div>
-        <div class="uk-card-footer">
-          <div class="uk-flex uk-flex-between">
-            <a class="uk-button uk-button-default" href="#">Подробнее</a>
-            <button class="uk-button uk-button-primary uk-text-right">
-              <span uk-icon="icon: cart;"></span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="uk-child-width-1-2@m">
-      <div class="uk-card uk-card-default">
-        <div class="uk-card-media-top">
-          <div class="uk-text-center">
-            <div class="uk-inline-clip uk-transition-toggle" tabindex="0">
-              <img class="uk-transition-scale-up uk-transition-opaque" data-src="/src/assets/examplePiece.jpg" data-width="1000" data-height="667" alt="UIkit cards" uk-img="">
-              <div class="uk-position-center">
-                <span class="uk-transition-fade" uk-icon="icon: plus; ratio: 2"></span>
-              </div>
-            </div>
-          </div>
-          <div class="uk-card-badge uk-label">Новинка</div>
-        </div>
-        <div class="uk-card-body">
-          <h3 class="uk-card-title">17.3" Ноутбук HP OMEN</h3>
-          <p class="uk-text-truncate">17-an118ur, черный</p>
-          <div class="uk-child-width-auto uk-flex-middle" uk-grid>
-            <div>
-              <span class="uk-text-emphasis uk-text-bold uk-text-large">120 000 р</span>
-            </div>
-            <div>
-              <ul class="uk-iconnav uk-flex-right">
-                <li><a href="#" uk-icon="icon: heart"></a></li>
-                <li><a href="#" uk-icon="icon: comment"></a></li>
-                <li><a href="#" uk-icon="icon: star"></a></li>
-              </ul>
-            </div>
-          </div>
-          <p class="uk-text-small uk-text-muted">100 шт. в наличии</p>
-
-        </div>
-        <div class="uk-card-footer">
-          <div class="uk-flex uk-flex-between">
-            <a class="uk-button uk-button-default" href="#">Подробнее</a>
-            <button class="uk-button uk-button-primary uk-text-right">
-              <span uk-icon="icon: cart;"></span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="uk-child-width-1-2@m">
-      <div class="uk-card uk-card-default">
-        <div class="uk-card-media-top">
-          <div class="uk-text-center">
-            <div class="uk-inline-clip uk-transition-toggle" tabindex="0">
-              <img class="uk-transition-scale-up uk-transition-opaque" data-src="/src/assets/examplePiece.jpg" data-width="1000" data-height="667" alt="UIkit cards" uk-img="">
-              <div class="uk-position-center">
-                <span class="uk-transition-fade" uk-icon="icon: plus; ratio: 2"></span>
-              </div>
-            </div>
-          </div>
-          <div class="uk-card-badge uk-label">Новинка</div>
-        </div>
-        <div class="uk-card-body">
-          <h3 class="uk-card-title">Телевизор Panasonic TX-43FR250</h3>
-          <p class="uk-text-truncate">20'' (50 см) Телевизор LED Panasonic 20S30HA102B черный</p>
-          <div class="uk-child-width-auto uk-flex-middle" uk-grid>
-            <div>
-              <span class="uk-text-emphasis uk-text-bold uk-text-large">6 999 р</span>
-            </div>
-            <div>
-              <ul class="uk-iconnav uk-flex-right">
-                <li><a href="#" uk-icon="icon: heart"></a></li>
-                <li><a href="#" uk-icon="icon: comment"></a></li>
-                <li><a href="#" uk-icon="icon: star"></a></li>
-              </ul>
-            </div>
-          </div>
-          <p class="uk-text-small uk-text-muted">100 шт. в наличии</p>
-
-        </div>
-        <div class="uk-card-footer">
-          <div class="uk-flex uk-flex-between">
-            <a class="uk-button uk-button-default" href="#">Подробнее</a>
-            <button class="uk-button uk-button-primary uk-text-right">
-              <span uk-icon="icon: cart;"></span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="uk-child-width-1-2@m">
-      <div class="uk-card uk-card-default">
-        <div class="uk-card-media-top">
-          <div class="uk-text-center">
-            <div class="uk-inline-clip uk-transition-toggle" tabindex="0">
-              <img class="uk-transition-scale-up uk-transition-opaque" data-src="/src/assets/examplePiece.jpg" data-width="1000" data-height="667" alt="UIkit cards" uk-img="">
-              <div class="uk-position-center">
-                <span class="uk-transition-fade" uk-icon="icon: plus; ratio: 2"></span>
-              </div>
-            </div>
-          </div>
-          <div class="uk-card-badge uk-label">Новинка</div>
-        </div>
-        <div class="uk-card-body">
-          <h3 class="uk-card-title">Телевизор Panasonic TX-43FR250</h3>
-          <p class="uk-text-truncate">20'' (50 см) Телевизор LED Panasonic 20S30HA102B черный</p>
-          <div class="uk-child-width-auto uk-flex-middle" uk-grid>
-            <div>
-              <span class="uk-text-emphasis uk-text-bold uk-text-large">6 999 р</span>
-            </div>
-            <div>
-              <ul class="uk-iconnav uk-flex-right">
-                <li><a href="#" uk-icon="icon: heart"></a></li>
-                <li><a href="#" uk-icon="icon: comment"></a></li>
-                <li><a href="#" uk-icon="icon: star"></a></li>
-              </ul>
-            </div>
-          </div>
-          <p class="uk-text-small uk-text-muted">100 шт. в наличии</p>
-
-        </div>
-        <div class="uk-card-footer">
-          <div class="uk-flex uk-flex-between">
-            <a class="uk-button uk-button-default" href="#">Подробнее</a>
-            <button class="uk-button uk-button-primary uk-text-right">
-              <span uk-icon="icon: cart;"></span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="uk-child-width-1-2@m">
-      <div class="uk-card uk-card-default">
-        <div class="uk-card-media-top">
-          <div class="uk-text-center">
-            <div class="uk-inline-clip uk-transition-toggle" tabindex="0">
-              <img class="uk-transition-scale-up uk-transition-opaque" data-src="/src/assets/examplePiece.jpg" data-width="1000" data-height="667" alt="UIkit cards" uk-img="">
-              <div class="uk-position-center">
-                <span class="uk-transition-fade" uk-icon="icon: plus; ratio: 2"></span>
-              </div>
-            </div>
-          </div>
-          <div class="uk-card-badge uk-label">Новинка</div>
-        </div>
-        <div class="uk-card-body">
-          <h3 class="uk-card-title">Телевизор Panasonic TX-43FR250</h3>
-          <p class="uk-text-truncate">20'' (50 см) Телевизор LED Panasonic 20S30HA102B черный</p>
-          <div class="uk-child-width-auto uk-flex-middle" uk-grid>
-            <div>
-              <span class="uk-text-emphasis uk-text-bold uk-text-large">6 999 р</span>
-            </div>
-            <div>
-              <ul class="uk-iconnav uk-flex-right">
-                <li><a href="#" uk-icon="icon: heart"></a></li>
-                <li><a href="#" uk-icon="icon: comment"></a></li>
-                <li><a href="#" uk-icon="icon: star"></a></li>
-              </ul>
-            </div>
-          </div>
-          <p class="uk-text-small uk-text-muted">100 шт. в наличии</p>
-
-        </div>
-        <div class="uk-card-footer">
-          <div class="uk-flex uk-flex-between">
-            <a class="uk-button uk-button-default" href="#">Подробнее</a>
-            <button class="uk-button uk-button-primary uk-text-right">
-              <span uk-icon="icon: cart;"></span>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
+</div>
 </template>
 
 <script>
@@ -331,6 +149,7 @@ import DataView from 'primevue/dataview';
 import DataViewLayoutOptions from 'primevue/dataviewlayoutoptions'
 import Carousel from 'primevue/carousel'
 import axios from "axios";
+import dayjs from 'dayjs';
 
 export default {
   components: {
@@ -387,8 +206,16 @@ export default {
       });
 
       return actors;
+    },
+
+    formatDate(dateString, format){
+      console.log(dateString);
+      const date = dayjs(dateString);
+      // Then specify how you want your dates to be formatted
+      return date.format(format);
     }
   },
+
   mounted() {
     axios.get('piece',
         {

@@ -9,7 +9,7 @@ import "primevue/resources/themes/saga-blue/theme.css"; //theme
 import "primevue/resources/primevue.min.css"; //core CSS
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
- import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import {library} from '@fortawesome/fontawesome-svg-core';
 import {
     faHome,
@@ -18,6 +18,17 @@ import {
     faSignInAlt,
     faSignOutAlt
 } from '@fortawesome/free-solid-svg-icons';
+
+// Vuetify
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+
+const vuetify = createVuetify({
+    components,
+    directives,
+})
 
 import './axios';
 
@@ -35,6 +46,8 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import Vuex from "vuex";
 
+
+
 createApp(App)
     .component('font-awesome-icon', FontAwesomeIcon)
     .use(router)
@@ -42,5 +55,6 @@ createApp(App)
     .use(PrimeVue)
     .use(Toast)
     .use(Vuex)
+    .use(vuetify)
     .use(VueAxios, axios)
     .mount("#app");
