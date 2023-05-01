@@ -107,7 +107,7 @@ export default {
 
   methods: {
     savePosition() {
-      axios.post('http://localhost:5010/api/admin/position', this.creatingPosition).then(function (response) {
+      axios.post('admin/position', this.creatingPosition).then(function (response) {
         const toast = useToast();
         toast.success('Должность создана');
         console.log(response);
@@ -115,7 +115,7 @@ export default {
     },
 
     editPosition() {
-      axios.put('http://localhost:5010/api/admin/position/' + this.editablePositions.id, this.editablePositions).then(function (response) {
+      axios.put('admin/position/' + this.editablePositions.id, this.editablePositions).then(function (response) {
         const toast = useToast();
         toast.success('Позиция обновлена');
 
@@ -136,7 +136,7 @@ export default {
     getPositionList: function () {
       let config = {
         method: 'get',
-        url: 'http://localhost:5010/api/positions',
+        url: 'positions',
       };
 
       this.axios(config)

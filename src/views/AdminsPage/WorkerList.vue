@@ -177,7 +177,7 @@ export default {
   },
   methods: {
     saveWorker() {
-      axios.post('http://localhost:5010/api/admin/theaterworker', {
+      axios.post('admin/theaterworker', {
         firstName: this.$data.firstName,
         lastName: this.$data.lastname,
         middleName: this.$data.middleName,
@@ -195,7 +195,7 @@ export default {
     },
 
     editWorker() {
-      axios.put('http://localhost:5010/api/admin/theaterworker/'+ this.editableWorker.id, this.editableWorker).then(function (response) {
+      axios.put('admin/theaterworker/'+ this.editableWorker.id, this.editableWorker).then(function (response) {
         const toast = useToast();
 
         toast.success('Пользователь обновлен');
@@ -209,7 +209,7 @@ export default {
     },
 
     loadEditWorker(id) {
-      axios.get('http://localhost:5010/api/worker/' + id).then((response) => {
+      axios.get('worker/' + id).then((response) => {
         this.editableWorker = response.data;
       })
     },
@@ -217,7 +217,7 @@ export default {
     getWorkerList: function () {
       var config = {
         method: 'get',
-        url: 'http://localhost:5010/api/workers',
+        url: 'workers',
       };
 
       this.axios(config)

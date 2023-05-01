@@ -148,16 +148,8 @@ export default {
   },
 
   methods: {
-    // savePosition() {
-    //   axios.post('http://localhost:5010/api/admin/position', this.creatingPosition).then(function (response) {
-    //     const toast = useToast();
-    //     toast.success('Должность создана');
-    //     console.log(response);
-    //   })
-    // },
-
     editUser() {
-      axios.put('http://localhost:5010/api/admin/user/' + this.editableUser.id, this.editableUser).then(function (response) {
+      axios.put('admin/user/' + this.editableUser.id, this.editableUser).then(function (response) {
         const toast = useToast();
         toast.success('Пользователь обновлен');
 
@@ -170,7 +162,7 @@ export default {
     },
 
     loadEditUser(id) {
-      axios.get('http://localhost:5010/api/account/user/' + id).then((response) => {
+      axios.get('account/user/' + id).then((response) => {
         console.log(response.data);
         this.editableUser = response.data;
       })
@@ -182,7 +174,7 @@ export default {
     getUserList: function () {
       let config = {
         method: 'get',
-        url: 'http://localhost:5010/api/admin/user/parameters',
+        url: 'admin/user/parameters',
       };
 
       this.axios(config)
