@@ -1,6 +1,8 @@
 <template>
 
-  <button class="uk-button uk-button-default uk-margin-small-right" type="button" uk-toggle="target: #modal-create-position">Создать должность</button>
+  <button class="uk-button uk-button-default uk-margin-small-right" type="button"
+          uk-toggle="target: #modal-create-position">Создать должность
+  </button>
 
   <!-- Модальное окно создания сотрудника -->
   <div id="modal-create-position" ref="position-create" uk-modal>
@@ -9,13 +11,13 @@
 
       <div class="flex flex-column gap-2">
         <label for="positionName">Название должности</label>
-        <InputText id="positionName" v-model="creatingPosition.positionName" />
+        <InputText id="positionName" v-model="creatingPosition.positionName"/>
         <small id="username-help">Введите название должности</small>
       </div>
 
       <div class="flex flex-column gap-2">
         <label for="positionType">Название типа должности</label>
-        <InputText id="positionType" v-model="creatingPosition.positionType" />
+        <InputText id="positionType" v-model="creatingPosition.positionType"/>
         <small id="username-help">Введите название типа должности</small>
       </div>
 
@@ -33,8 +35,12 @@
     <Column field="positionType" header="Тип должности"></Column>
     <Column header="Действия">
       <template #body="{data}">
-        <button class="uk-button uk-button-primary" @click="loadEditPosition(data.id, data.positionName, data.positionType)" uk-toggle="target: #modal-edit-positiont">Редактировать</button>
-        <button class="uk-button uk-button-danger" @click="deletePosition(data.id)" style="margin-left: 10px;">Удалить</button>
+        <button class="uk-button uk-button-primary"
+                @click="loadEditPosition(data.id, data.positionName, data.positionType)"
+                uk-toggle="target: #modal-edit-positiont">Редактировать
+        </button>
+        <button class="uk-button uk-button-danger" @click="deletePosition(data.id)" style="margin-left: 10px;">Удалить
+        </button>
       </template>
     </Column>
   </DataTable>
@@ -57,7 +63,7 @@
 
       <div class="flex flex-column gap-2">
         <label for="username">Название типа должности</label>
-        <InputText id="username" v-model="editablePositions.positionType" />
+        <InputText id="username" v-model="editablePositions.positionType"/>
       </div>
 
       <p class="uk-text-right">
@@ -78,6 +84,7 @@ import Row from 'primevue/row';
 import InputText from 'primevue/inputtext';
 import {useToast} from "vue-toastification";
 import axios from "axios";
+import UIkit from 'uikit';
 
 export default {
   name: "PositionAdminPage",
@@ -87,6 +94,7 @@ export default {
     ColumnGroup,
     Row,
     InputText,
+    UIkit,
   },
   data() {
     return {
@@ -107,24 +115,33 @@ export default {
 
   methods: {
     savePosition() {
-      axios.post('admin/position', this.creatingPosition).then(function (response) {
+      axios.post('admin/position', this.creatingPosition).then((response) => {
         const toast = useToast();
+
+        this.getPositionList();
+
+        UIkit.modal('#modal-create-position').hide();
         toast.success('Должность создана');
+
         console.log(response);
       })
     },
 
     editPosition() {
-      axios.put('admin/position/' + this.editablePositions.id, this.editablePositions).then(function (response) {
-        const toast = useToast();
-        toast.success('Позиция обновлена');
+      axios.put('admin/position/' + this.editablePositions.id, this.editablePositions)
+          .then( () => {
+            const toast = useToast();
+            this.getPositionList();
 
-      }).catch(function (error) {
-        const toast = useToast();
+            UIkit.modal('#modal-edit-positiont').hide();
+            toast.success('Позиция обновлена');
+          })
+          .catch(function (error) {
+            const toast = useToast();
 
-        toast.error('ошибка');
-        console.log(error);
-      })
+            toast.error('ошибка');
+            console.log(error);
+          })
     },
 
     loadEditPosition(id, positionName, positionType) {
@@ -153,7 +170,7 @@ export default {
     }
   },
   mounted() {
-    this.getPositionList()
+    this.getPositionList();
   }
 }
 </script>

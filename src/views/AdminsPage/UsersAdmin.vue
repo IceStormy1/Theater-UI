@@ -1,31 +1,31 @@
 <template>
 
-<!--  <button class="uk-button uk-button-default uk-margin-small-right" type="button" uk-toggle="target: #modal-create-position">Создать сотрудника</button>-->
+  <!--  <button class="uk-button uk-button-default uk-margin-small-right" type="button" uk-toggle="target: #modal-create-position">Создать сотрудника</button>-->
 
-<!--  &lt;!&ndash; Модальное окно создания сотрудника &ndash;&gt;-->
-<!--  <div id="modal-create-position" ref="position-create" uk-modal>-->
-<!--    <div class="uk-modal-dialog uk-modal-body">-->
-<!--      <h2 class="uk-modal-title">Создание должности</h2>-->
+  <!--  &lt;!&ndash; Модальное окно создания сотрудника &ndash;&gt;-->
+  <!--  <div id="modal-create-position" ref="position-create" uk-modal>-->
+  <!--    <div class="uk-modal-dialog uk-modal-body">-->
+  <!--      <h2 class="uk-modal-title">Создание должности</h2>-->
 
-<!--      <div class="flex flex-column gap-2">-->
-<!--        <label for="positionName">Название позиции </label>-->
-<!--        <InputText id="positionName" v-model="creatingPosition.positionName" />-->
-<!--        <small id="username-help">Введите название позиции</small>-->
-<!--      </div>-->
+  <!--      <div class="flex flex-column gap-2">-->
+  <!--        <label for="positionName">Название позиции </label>-->
+  <!--        <InputText id="positionName" v-model="creatingPosition.positionName" />-->
+  <!--        <small id="username-help">Введите название позиции</small>-->
+  <!--      </div>-->
 
-<!--      <div class="flex flex-column gap-2">-->
-<!--        <label for="positionType">Название типа позиции</label>-->
-<!--        <InputText id="positionType" v-model="creatingPosition.positionType" />-->
-<!--        <small id="username-help">Введите название типа позиции</small>-->
-<!--      </div>-->
+  <!--      <div class="flex flex-column gap-2">-->
+  <!--        <label for="positionType">Название типа позиции</label>-->
+  <!--        <InputText id="positionType" v-model="creatingPosition.positionType" />-->
+  <!--        <small id="username-help">Введите название типа позиции</small>-->
+  <!--      </div>-->
 
 
-<!--      <p class="uk-text-right">-->
-<!--        <button class="uk-button uk-button-default uk-modal-close" type="button">Закрыть</button>-->
-<!--        <button class="uk-button uk-button-primary" type="button" @click="savePosition">Сохранить</button>-->
-<!--      </p>-->
-<!--    </div>-->
-<!--  </div>-->
+  <!--      <p class="uk-text-right">-->
+  <!--        <button class="uk-button uk-button-default uk-modal-close" type="button">Закрыть</button>-->
+  <!--        <button class="uk-button uk-button-primary" type="button" @click="savePosition">Сохранить</button>-->
+  <!--      </p>-->
+  <!--    </div>-->
+  <!--  </div>-->
 
   <DataTable :value="users">
     <Column field="id" header="id"></Column>
@@ -38,14 +38,17 @@
     <Column field="birthDate" header="Дата рождения"></Column>
     <Column header="Действия">
       <template #body="{data}">
-        <button class="uk-button uk-button-primary" @click="loadEditUser(data.id)" uk-toggle="target: #modal-edit-users">Редактировать</button>
-        <button class="uk-button uk-button-danger" @click="deleteUser(data.id)" style="margin-left: 10px;">Удалить</button>
+        <button class="uk-button uk-button-primary" @click="loadEditUser(data.id)"
+                uk-toggle="target: #modal-edit-users">Редактировать
+        </button>
+        <button class="uk-button uk-button-danger" @click="deleteUser(data.id)" style="margin-left: 10px;">Удалить
+        </button>
       </template>
     </Column>
   </DataTable>
 
 
-  <!-- Модальное окно редактирования сотрудника -->
+  <!-- Модальное окно редактирования пользователя -->
   <div id="modal-edit-users" uk-modal ref="modal-edit">
     <div class="uk-modal-dialog uk-modal-body">
       <h2 class="uk-modal-title">Редактирование пользователя</h2>
@@ -65,33 +68,33 @@
 
       <div class="flex flex-column gap-2">
         <label for="username">Email</label>
-        <InputText id="username" v-model="editableUser.email" />
+        <InputText id="username" v-model="editableUser.email"/>
       </div>
 
       <div class="flex flex-column gap-2">
         <label for="username">Имя</label>
-        <InputText id="username" v-model="editableUser.firstName" />
+        <InputText id="username" v-model="editableUser.firstName"/>
       </div>
 
       <div class="flex flex-column gap-2">
         <label for="username">Фамилия</label>
-        <InputText id="username" v-model="editableUser.lastName" />
+        <InputText id="username" v-model="editableUser.lastName"/>
       </div>
 
       <div class="flex flex-column gap-2">
         <label for="username">Отчество</label>
-        <InputText id="username" v-model="editableUser.middleName" />
+        <InputText id="username" v-model="editableUser.middleName"/>
       </div>
 
 
       <div class="flex flex-column gap-2">
         <label for="username">Номер телефона</label>
-        <InputText id="username" v-model="editableUser.phone" />
+        <InputText id="username" v-model="editableUser.phone"/>
       </div>
 
       <div class="flex flex-column gap-2">
         <label for="username">Пол</label>
-        <InputText id="username" v-model="editableUser.gender" />
+        <InputText id="username" v-model="editableUser.gender"/>
       </div>
 
 
@@ -113,6 +116,7 @@ import Row from 'primevue/row';
 import InputText from 'primevue/inputtext';
 import {useToast} from "vue-toastification";
 import axios from "axios";
+import UIkit from 'uikit';
 
 export default {
   name: "UsersAdmin",
@@ -122,6 +126,7 @@ export default {
     ColumnGroup,
     Row,
     InputText,
+    UIkit,
   },
   data() {
     return {
@@ -149,16 +154,20 @@ export default {
 
   methods: {
     editUser() {
-      axios.put('admin/user/' + this.editableUser.id, this.editableUser).then(function (response) {
-        const toast = useToast();
-        toast.success('Пользователь обновлен');
+      axios.put('admin/user/' + this.editableUser.id, this.editableUser)
+          .then((response) => {
+            const toast = useToast();
+            this.getUserList();
 
-      }).catch(function (error) {
-        const toast = useToast();
+            UIkit.modal('#modal-edit-users').hide();
+            toast.success('Пользователь обновлен');
+          })
+          .catch(function (error) {
+            const toast = useToast();
 
-        toast.error('ошибка');
-        console.log(error);
-      })
+            toast.error('ошибка');
+            console.log(error);
+          })
     },
 
     loadEditUser(id) {
