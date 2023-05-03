@@ -35,6 +35,7 @@ import InputText from 'primevue/inputtext';
 // import '/src/assets/auth.css'
 
 import {ref} from 'vue';
+import {useToast} from "vue-toastification";
 
 const value = ref(null);
 
@@ -64,13 +65,19 @@ export default {
         this.$store.dispatch('auth/login', this.user).then(
             () => {
               this.$router.push('/');
+
+              const toast = useToast();
+              toast.success('Добро пожаловать');
             },
             error => {
               this.loading = false;
-              this.message =
-                  (error.response && error.response.data && error.response.data.message) ||
-                  error.message ||
-                  error.toString();
+              let errorMessage = error.response.data.errors == null
+                  ? error.response.data.title
+                  : Object.values(error.response.data.errors)[0][0];
+
+              const toast = useToast();
+
+              toast.error(errorMessage);
             }
         );
       }
