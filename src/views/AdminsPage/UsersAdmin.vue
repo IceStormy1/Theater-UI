@@ -30,9 +30,7 @@
   <DataTable :value="users">
     <Column field="id" header="id"></Column>
     <Column field="email" header="email"></Column>
-    <Column field="firstName" header="Имя"></Column>
-    <Column field="lastName" header="Фамилия"></Column>
-    <Column field="middleName" header="Отчество"></Column>
+    <Column field="fullName" header="ФИО"></Column>
     <Column field="phone" header="Номер телефона"></Column>
     <Column field="gender" header="Пол"></Column>
     <Column field="birthDate" header="Дата рождения"></Column>
@@ -49,7 +47,7 @@
 
 
   <!-- Модальное окно редактирования пользователя -->
-  <div id="modal-edit-users" uk-modal ref="modal-edit">
+  <div id="modal-edit-users" uk-modal ref="modal-edit" bg-close="false">
     <div class="uk-modal-dialog uk-modal-body">
       <h2 class="uk-modal-title">Редактирование пользователя</h2>
 
@@ -64,7 +62,6 @@
         <InputText id="username" v-model="editableUser.userName"/>
         <small id="username-help">Можете изменить имя пользователя, не трогайте поле если не хотите менять</small>
       </div>
-
 
       <div class="flex flex-column gap-2">
         <label for="username">Email</label>
@@ -86,6 +83,16 @@
         <InputText id="username" v-model="editableUser.middleName"/>
       </div>
 
+      <div class="flex flex-column gap-2">
+        <label for="birth_date">Дата рождения</label>
+        <Calendar v-model="editableUser.birthDate"
+                  :minDate="minDate"
+                  :appendTo="'#modal-edit-users'"
+                  :maxDate="maxDate"
+                  :manualInput="false"
+                  inputId="birth_date"
+                  showClear/>
+      </div>
 
       <div class="flex flex-column gap-2">
         <label for="username">Номер телефона</label>
@@ -93,8 +100,15 @@
       </div>
 
       <div class="flex flex-column gap-2">
-        <label for="username">Пол</label>
-        <InputText id="username" v-model="editableUser.gender"/>
+        <label for="gender">Пол</label>
+        <Dropdown v-model="editableUser.gender"
+                  :options="genders"
+                  optionLabel="name"
+                  optionValue="code"
+                  :appendTo="'#modal-edit-users'"
+                  inputId="gender"
+                  showClear>
+        </Dropdown>
       </div>
 
 
@@ -114,9 +128,25 @@ import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';
 import Row from 'primevue/row';
 import InputText from 'primevue/inputtext';
+import Gender from '../../models/gender'
+import Dropdown from 'primevue/dropdown';
+import Calendar from 'primevue/Calendar';
 import {useToast} from "vue-toastification";
 import axios from "axios";
 import UIkit from 'uikit';
+import {ref} from "vue";
+
+// todo mounted
+let today = new Date();
+let year = today.getFullYear();
+
+const minDate = ref(new Date());
+const maxDate = ref(new Date());
+
+minDate.value.setMonth(1);
+minDate.value.setFullYear(year - 100);
+maxDate.value.setMonth(12);
+maxDate.value.setFullYear(year - 14);
 
 export default {
   name: "UsersAdmin",
@@ -127,15 +157,15 @@ export default {
     Row,
     InputText,
     UIkit,
+    Dropdown,
+    Calendar
   },
   data() {
     return {
       users: [],
-
-      creatingPosition: {
-        positionName: null,
-        positionType: null
-      },
+      genders: Gender.genders,
+      minDate: minDate,
+      maxDate: maxDate,
 
       editableUser: {
         id: null,
@@ -147,8 +177,8 @@ export default {
         middleName: null,
         phone: null,
         gender: null,
-        birthDate: "2023-04-30T11:52:19.107Z",
-      }
+        birthDate: null
+      },
     }
   },
 

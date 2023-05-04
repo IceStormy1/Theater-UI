@@ -4,8 +4,8 @@
           uk-toggle="target: #modal-create-position">Создать должность
   </button>
 
-  <!-- Модальное окно создания сотрудника -->
-  <div id="modal-create-position" ref="position-create" uk-modal>
+  <!-- Модальное окно создания должности -->
+  <div id="modal-create-position" ref="position-create" uk-modal bg-close="false">
     <div class="uk-modal-dialog uk-modal-body">
       <h2 class="uk-modal-title">Создание должности</h2>
 
@@ -16,9 +16,15 @@
       </div>
 
       <div class="flex flex-column gap-2">
-        <label for="positionType">Название типа должности</label>
-        <InputText id="positionType" v-model="creatingPosition.positionType"/>
-        <small id="username-help">Введите название типа должности</small>
+        <label for="gender">Тип должности</label>
+        <Dropdown v-model="creatingPosition.positionType"
+                  :options="positionTypes"
+                  optionLabel="displayName"
+                  optionValue="name"
+                  :appendTo="'#modal-create-position'"
+                  inputId="positionTypes"
+                  showClear>
+        </Dropdown>
       </div>
 
 
@@ -32,7 +38,7 @@
   <DataTable :value="positions">
     <Column field="id" header="id"></Column>
     <Column field="positionName" header="Название должности"></Column>
-    <Column field="positionType" header="Тип должности"></Column>
+    <Column field="positionTypeName" header="Тип должности"></Column>
     <Column header="Действия">
       <template #body="{data}">
         <button class="uk-button uk-button-primary"
@@ -46,8 +52,8 @@
   </DataTable>
 
 
-  <!-- Модальное окно редактирования сотрудника -->
-  <div id="modal-edit-positiont" uk-modal ref="modal-edit">
+  <!-- Модальное окно редактирования должности -->
+  <div id="modal-edit-positiont" uk-modal ref="modal-edit" bg-close="false">
     <div class="uk-modal-dialog uk-modal-body">
       <h2 class="uk-modal-title">Редактирование должности</h2>
 
@@ -62,8 +68,15 @@
       </div>
 
       <div class="flex flex-column gap-2">
-        <label for="username">Название типа должности</label>
-        <InputText id="username" v-model="editablePositions.positionType"/>
+        <label for="gender">Тип должности</label>
+        <Dropdown v-model="editablePositions.positionType"
+                  :options="positionTypes"
+                  optionLabel="displayName"
+                  optionValue="name"
+                  :appendTo="'#modal-edit-positiont'"
+                  inputId="positionTypes"
+                  showClear>
+        </Dropdown>
       </div>
 
       <p class="uk-text-right">
@@ -85,6 +98,7 @@ import InputText from 'primevue/inputtext';
 import {useToast} from "vue-toastification";
 import axios from "axios";
 import UIkit from 'uikit';
+import Dropdown from 'primevue/dropdown';
 
 export default {
   name: "PositionAdminPage",
@@ -95,6 +109,7 @@ export default {
     Row,
     InputText,
     UIkit,
+    Dropdown,
   },
   data() {
     return {
@@ -109,7 +124,8 @@ export default {
         id: null,
         positionName: null,
         positionType: null
-      }
+      },
+      positionTypes: null,
     }
   },
 
@@ -145,6 +161,7 @@ export default {
     },
 
     loadEditPosition(id, positionName, positionType) {
+      console.log(positionType)
       this.editablePositions.id = id;
       this.editablePositions.positionName = positionName;
       this.editablePositions.positionType = positionType;
@@ -167,10 +184,26 @@ export default {
 
     deletePosition: function (id) {
       console.log(id);
+    },
+
+    getPositionTypes: function (){
+      let config = {
+        method: 'get',
+        url: 'admin/position/types',
+      };
+
+      this.axios(config)
+          .then((response) => {
+            this.positionTypes = response.data.items;
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
     }
   },
   mounted() {
     this.getPositionList();
+    this.getPositionTypes();
   }
 }
 </script>

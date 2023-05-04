@@ -61,7 +61,13 @@
         </span>
 
         <span class="p-float-label" id="test">
-           <Dropdown v-model="user.gender" :options="genders" showClear optionLabel="name" class="w-full md:w-12rem" inputId="gender"/>
+           <Dropdown v-model="user.gender"
+                     :options="genders"
+                     showClear
+                     optionLabel="name"
+                     optionValue="code"
+                     class="w-full md:w-12rem"
+                     inputId="gender"/>
           <label for="gender">Пол</label>
         </span>
 
@@ -109,7 +115,7 @@ export default {
       message: '',
       minDate: minDate,
       maxDate: maxDate,
-      genders: Gender.genders
+      genders: Gender.genders,
     };
   },
   components: {

@@ -32,7 +32,7 @@ class AuthService {
             lastName: user.lastName,
             middleName: user.middleName,
             phone: user.phone,
-            gender: user.gender?.code,
+            gender: user.gender,
             birthDate: user.birthDate,
             photoId: user.photoId
         });
