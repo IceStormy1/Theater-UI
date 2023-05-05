@@ -27,7 +27,7 @@
   <!--    </div>-->
   <!--  </div>-->
 
-  <DataTable :value="users">
+  <DataTable :value="users.items">
     <Column field="id" header="id"></Column>
     <Column field="email" header="email"></Column>
     <Column field="fullName" header="ФИО"></Column>
@@ -44,6 +44,16 @@
       </template>
     </Column>
   </DataTable>
+
+  <Paginator :rows="userFilter.limit" :totalRecords="users.total" :rowsPerPageOptions="[5, 10, 20, 30]"
+             @page="onPage($event)">
+    <template #start="slotProps">
+      Всего {{ users.total }} записей
+    </template>
+    <template #end>
+
+    </template>
+  </Paginator>
 
 
   <!-- Модальное окно редактирования пользователя -->
@@ -131,6 +141,8 @@ import InputText from 'primevue/inputtext';
 import Gender from '../../models/gender'
 import Dropdown from 'primevue/dropdown';
 import Calendar from 'primevue/Calendar';
+import Paginator from 'primevue/paginator';
+import UserFilter from '../../models/filters/userFilter';
 import {useToast} from "vue-toastification";
 import axios from "axios";
 import UIkit from 'uikit';
@@ -158,12 +170,14 @@ export default {
     InputText,
     UIkit,
     Dropdown,
-    Calendar
+    Calendar,
+    Paginator,
   },
   data() {
     return {
       users: [],
       genders: Gender.genders,
+      userFilter: new UserFilter(),
       minDate: minDate,
       maxDate: maxDate,
 
@@ -214,11 +228,15 @@ export default {
       let config = {
         method: 'get',
         url: 'admin/user/parameters',
+        params: {
+          limit: this.userFilter.limit,
+          offset: this.userFilter.offset,
+        }
       };
 
       this.axios(config)
           .then((response) => {
-            this.users = response.data.items;
+            this.users = response.data;
           })
           .catch(function (error) {
             console.log(error);
@@ -227,10 +245,16 @@ export default {
 
     deleteUser: function (id) {
       console.log(id);
-    }
+    },
+    onPage(event) {
+      this.userFilter.limit = event.rows;
+      this.userFilter.offset = event.first;
+
+      this.getUserList()
+    },
   },
   mounted() {
-    this.getUserList()
+    this.getUserList(this.limit)
   }
 }
 </script>

@@ -16,20 +16,20 @@
       </v-row>
     </v-footer>
 
-      <yandex-map
-          ref="map"
+    <yandex-map
+        ref="map"
+        :coords="coords"
+        zoom="20"
+        style="width: 100%; height: 600px"
+        :controls="[]"
+        :settings="settings"
+    >
+      <ymap-marker
+          marker-id="123"
           :coords="coords"
-          zoom="20"
-          style="width: 100%; height: 600px"
-          :controls="[]"
-          :settings ="settings"
-      >
-        <ymap-marker
-            marker-id="123"
-            :coords="coords"
-            :icon="markerIcon"
-        />
-      </yandex-map>
+          :icon="markerIcon"
+      />
+    </yandex-map>
 
   </v-app>
 
@@ -80,6 +80,9 @@ export default {
           {
             label: 'Перейти к профилю',
             command: () => this.$router.push('/profile/' + this.userId)
+          }, {
+            label: 'Админка',
+            command: () => this.$router.push('/admin/')
           },
           {
             label: 'Выйти',
@@ -100,7 +103,7 @@ export default {
         imageHref: './src/assets/logoNormal.svg',
         imageSize: [300, 300],
         imageOffset: [-100, -150],
-        contentOffset: [0,0],
+        contentOffset: [0, 0],
       },
       settings: {
         apiKey: '7d673843-025c-4b7e-8f00-acad155b6947',

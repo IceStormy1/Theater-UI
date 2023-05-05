@@ -74,7 +74,7 @@
     </div>
   </div>
 
-  <DataTable :value="workers">
+  <DataTable :value="workers.items">
     <Column field="id" header="id"></Column>
     <Column field="fullName" header="ФИО"></Column>
     <Column field="positionName" header="Должность"></Column>
@@ -91,9 +91,20 @@
     </Column>
   </DataTable>
 
+  <Paginator :rows="userFilter.limit" :totalRecords="workers.total" :rowsPerPageOptions="[5, 10, 20, 30]"
+             @page="onPage($event)">
+    <template #start="slotProps">
+      Всего {{ workers.total }} записей
+    </template>
+    <template #end>
+
+    </template>
+  </Paginator>
+
 
   <!-- Модальное окно редактирования сотрудника -->
-  <div id="modal-edit-worker" uk-modal ref="modal-edit-worker" bg-close="false"> <!--bg-close = false иначе при выборе значения в дроп-дауна закрывается модалка-->
+  <div id="modal-edit-worker" uk-modal ref="modal-edit-worker" bg-close="false">
+    <!--bg-close = false иначе при выборе значения в дроп-дауна закрывается модалка-->
     <div class="uk-modal-dialog uk-modal-body">
       <h2 class="uk-modal-title">Редактирование сотрудника</h2>
 
@@ -183,6 +194,8 @@ import InputText from 'primevue/inputtext';
 import Gender from '../../models/gender'
 import Dropdown from 'primevue/dropdown';
 import Calendar from 'primevue/Calendar';
+import Paginator from 'primevue/paginator';
+import UserFilter from '../../models/filters/userFilter';
 import {useToast} from "vue-toastification";
 import axios from "axios";
 import UIkit from 'uikit';
@@ -210,6 +223,7 @@ export default {
     InputText,
     Dropdown,
     Calendar,
+    Paginator,
     UIkit,
   },
   data() {
@@ -225,6 +239,7 @@ export default {
       positionType: null,
       genders: Gender.genders,
       workerPositions: null,
+      userFilter: new UserFilter(),
       minDate: minDate,
       maxDate: maxDate,
 
@@ -293,11 +308,15 @@ export default {
       const config = {
         method: 'get',
         url: 'workers',
+        params: {
+          limit: this.userFilter.limit,
+          offset: this.userFilter.offset,
+        },
       };
 
       this.axios(config)
           .then((response) => {
-            this.workers = response.data.items;
+            this.workers = response.data;
           })
           .catch(function (error) {
             console.log(error);
@@ -307,7 +326,7 @@ export default {
     deleteWorker: function (id) {
       console.log(id);
     },
-    getWorkerPositions: function (){
+    getWorkerPositions: function () {
       const config = {
         method: 'get',
         url: 'positions',
@@ -320,6 +339,13 @@ export default {
           .catch(function (error) {
             console.log(error);
           });
+    },
+    onPage(event) {
+      console.log(event);
+      this.userFilter.limit = event.rows;
+      this.userFilter.offset = event.first;
+
+      this.getWorkerList()
     },
   },
   mounted() {
