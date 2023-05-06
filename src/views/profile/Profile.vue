@@ -1,11 +1,11 @@
 <template>
-<!--  <div>Пользователь {{ $route.params.id }}</div>-->
+  <!--  <div>Пользователь {{ $route.params.id }}</div>-->
 
   <div class="uk-text-center" uk-grid>
     <div class="uk-width-auto@m">
-<!--      <button class="uk-button uk-button-primary" @click.prevent="submitForm">-->
-<!--        Submit-->
-<!--      </button>-->
+      <!--      <button class="uk-button uk-button-primary" @click.prevent="submitForm">-->
+      <!--        Submit-->
+      <!--      </button>-->
 
       <div class="uk-card uk-card-default uk-card-body">
 
@@ -15,12 +15,14 @@
               <input type="file" @change="onFileChange" style="display:none" accept="image/*">
               <div>
                 <span uk-icon="icon: cloud-upload"></span>
-                <span class="uk-text-middle">Upload Avatar</span>
+                <span class="uk-text-middle">Загрузить</span>
               </div>
             </label>
           </div>
           <div class="avatar-preview" v-else>
-            <div class="avatar-preview-img" :style="{ 'background-image': 'url(' + imageSrc + ')' }"></div>
+            <div class="avatar-preview-img" :style="{ 'background-image': 'url(' + imageSrc + ')' }">
+              <button class=" uk-flex-right" type="button" aria-label="Close" uk-close @click="deleteImage"></button>
+            </div>
           </div>
         </div>
         <button v-if="file" class="uk-button uk-button-primary" @click.prevent="submitForm">
@@ -32,22 +34,22 @@
     <div class="uk-width-1-3@m">
 
       <Card>
-        <template #title> Карточка долбаеба </template>
+        <template #title> Карточка долбаеба</template>
         <template #content>
 
           <dl class="uk-description-list uk-description-list-divider">
             <dt>Email</dt>
-            <dd> {{currentUser.email}}</dd>
+            <dd> {{ currentUser.email }}</dd>
             <dt>Имя</dt>
-            <dd>{{currentUser.firstName}}</dd>
+            <dd>{{ currentUser.firstName }}</dd>
             <dt>Фамилия</dt>
-            <dd> {{currentUser.lastName}} </dd>
+            <dd> {{ currentUser.lastName }}</dd>
             <dt>Отчество</dt>
-            <dd> {{currentUser.middleName}} </dd>
+            <dd> {{ currentUser.middleName }}</dd>
             <dt>Пол</dt>
-            <dd> {{currentUser.gender}} </dd>
+            <dd> {{ currentUser.gender }}</dd>
             <dt>Телефон</dt>
-            <dd> {{currentUser.phone}} </dd>
+            <dd> {{ currentUser.phone }}</dd>
           </dl>
         </template>
       </Card>
@@ -104,6 +106,30 @@ export default {
 
         this.file = file;
       }
+    },
+
+    deleteImage() {
+      const toast = useToast();
+      axios.delete('/filestorage/' + this.currentUser.photo.id)
+          .then((respone) => {
+            this.currentUser.photo = null;
+
+            axios.put('admin/user/' + this.currentUser.id, this.currentUser).then(() => {
+              const toast = useToast();
+              toast.success('Фотография удалена')
+
+              this.imageSrc = null;
+              this.file = null;
+
+            }).catch(function (error) {
+              const toast = useToast();
+
+              toast.error('ошибка');
+            })
+          })
+          .catch(function (error) {
+            toast.error('Произошла ошибка при удалении фотографии: ' + error.title);
+          })
     },
 
     submitForm() {
