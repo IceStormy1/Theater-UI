@@ -3,9 +3,6 @@
 
   <div class="uk-text-center" uk-grid>
     <div class="uk-width-auto@m">
-      <!--      <button class="uk-button uk-button-primary" @click.prevent="submitForm">-->
-      <!--        Submit-->
-      <!--      </button>-->
 
       <div class="uk-card uk-card-default uk-card-body">
 
@@ -34,18 +31,32 @@
     <div class="uk-width-1-3@m">
 
       <Card>
-        <template #title> Карточка долбаеба</template>
+        <template #title>
+         Ваш профиль
+          <a uk-toggle="target: #modal-edit-users" style="color: #708090">
+            <span class="pi pi-user-edit" style="font-size: 1.5rem"></span>
+          </a>
+<!--          <Button icon="pi pi-user-edit"-->
+<!--                  severity="secondary"-->
+<!--                  size="large"-->
+<!--                  uk-toggle="target: #modal-edit-users"-->
+<!--                  text rounded  />-->
+        </template>
         <template #content>
 
           <dl class="uk-description-list uk-description-list-divider">
             <dt>Email</dt>
             <dd> {{ currentUser.email }}</dd>
+            <dt>Никнейм</dt>
+            <dd> {{ currentUser.userName }}</dd>
             <dt>Имя</dt>
             <dd>{{ currentUser.firstName }}</dd>
             <dt>Фамилия</dt>
             <dd> {{ currentUser.lastName }}</dd>
             <dt>Отчество</dt>
             <dd> {{ currentUser.middleName }}</dd>
+            <dt>Дата рождения</dt>
+            <dd> {{formatDate(currentUser.birthDate, 'DD.MM.YYYY')}}</dd>
             <dt>Пол</dt>
             <dd> {{ currentUser.gender }}</dd>
             <dt>Телефон</dt>
@@ -54,23 +65,131 @@
         </template>
       </Card>
     </div>
+
+    <!-- Модальное окно редактирования пользователя -->
+    <div id="modal-edit-users" uk-modal ref="modal-edit" bg-close="false">
+      <div class="uk-modal-dialog uk-modal-body">
+        <h2 class="uk-modal-title">Редактирование пользователя</h2>
+
+        <div class="flex flex-column gap-2">
+          <label for="username">id пользователя</label>
+          <InputText disabled id="username" v-model="currentUser.id"/>
+          <small id="username-help">Изменить нельзя</small>
+        </div>
+
+        <div class="flex flex-column gap-2">
+          <label for="username">Логин (username)</label>
+          <InputText id="username" v-model="currentUser.userName"/>
+          <small id="username-help">Можете изменить имя пользователя, не трогайте поле если не хотите менять</small>
+        </div>
+
+        <div class="flex flex-column gap-2">
+          <label for="username">Email</label>
+          <InputText id="username" v-model="currentUser.email"/>
+        </div>
+
+        <div class="flex flex-column gap-2">
+          <label for="username">Имя</label>
+          <InputText id="username" v-model="currentUser.firstName"/>
+        </div>
+
+        <div class="flex flex-column gap-2">
+          <label for="username">Фамилия</label>
+          <InputText id="username" v-model="currentUser.lastName"/>
+        </div>
+
+        <div class="flex flex-column gap-2">
+          <label for="username">Отчество</label>
+          <InputText id="username" v-model="currentUser.middleName"/>
+        </div>
+
+        <div class="flex flex-column gap-2">
+          <label for="birth_date">Дата рождения</label>
+          <Calendar v-model="currentUser.birthDate"
+                    :minDate="minDate"
+                    :appendTo="'#modal-edit-users'"
+                    :maxDate="maxDate"
+                    :manualInput="false"
+                    inputId="birth_date"
+                    showClear/>
+        </div>
+
+        <div class="flex flex-column gap-2">
+          <label for="username">Номер телефона</label>
+          <InputText id="username" v-model="currentUser.phone"/>
+        </div>
+
+        <div class="flex flex-column gap-2">
+          <label for="gender">Пол</label>
+          <Dropdown v-model="currentUser.gender"
+                    :options="genders"
+                    optionLabel="name"
+                    optionValue="code"
+                    :appendTo="'#modal-edit-users'"
+                    inputId="gender"
+                    showClear>
+          </Dropdown>
+        </div>
+
+
+        <p class="uk-text-right">
+          <button class="uk-button uk-button-default uk-modal-close" type="button">Закрыть</button>
+          <button class="uk-button uk-button-primary" type="button" @click="editUser">Сохранить</button>
+        </p>
+      </div>
+
+    </div>
+
   </div>
 </template>
 
 <script>
 
-import InputText from 'primevue/inputtext';
 import Card from 'primevue/card';
-import UIkit from "uikit";
-import axios from "axios";
+import Button from 'primevue/button';
+import 'primeicons/primeicons.css';
 import {useToast} from "vue-toastification";
+import dayjs from "dayjs";
+import {ref} from "vue";
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+import ColumnGroup from 'primevue/columngroup';
+import Row from 'primevue/row';
+import InputText from 'primevue/inputtext';
+import Gender from '../../models/gender'
+import Dropdown from 'primevue/dropdown';
+import Calendar from 'primevue/Calendar';
+import Paginator from 'primevue/paginator';
+import UserFilter from '../../models/filters/userFilter';
+import axios from "axios";
+import UIkit from 'uikit';
 
+// todo mounted
+let today = new Date();
+let year = today.getFullYear();
+
+const minDate = ref(new Date());
+const maxDate = ref(new Date());
+
+minDate.value.setMonth(1);
+minDate.value.setFullYear(year - 100);
+maxDate.value.setMonth(12);
+maxDate.value.setFullYear(year - 14);
 
 export default {
   name: "Profile",
   components: {
     InputText,
     Card,
+    Button,
+    DataTable,
+    Column,
+    ColumnGroup,
+    Row,
+    UIkit,
+    Dropdown,
+    Calendar,
+    Paginator,
   },
 
   data() {
@@ -89,7 +208,10 @@ export default {
         gender: null,
         birthDate: "2023-04-30T11:52:19.107Z",
         photo: null
-      }
+      },
+      minDate: minDate,
+      maxDate: maxDate,
+      genders: Gender.genders,
     }
   },
   methods: {
@@ -157,12 +279,6 @@ export default {
 
         toast.error('ошибка при загрузке фото');
       });
-
-
-      // UIkit.notification({
-      //   message: "Form submitted successfully!",
-      //   status: "success",
-      // });
     },
 
     loadUser() {
@@ -184,7 +300,29 @@ export default {
           .catch(function (error) {
             console.log(error);
           });
-    }
+    },
+    formatDate(dateString, format){
+      console.log(dateString);
+      const date = dayjs(dateString);
+      // Then specify how you want your dates to be formatted
+      return date.format(format);
+    },
+    editUser() {
+      axios.put('account/' + this.currentUser.id + '/update', this.currentUser)
+          .then((response) => {
+            const toast = useToast();
+            this.loadUser()
+
+            UIkit.modal('#modal-edit-users').hide();
+            toast.success('Профиль обновлен');
+          })
+          .catch(function (error) {
+            const toast = useToast();
+
+            toast.error('ошибка');
+            console.log(error);
+          })
+    },
   },
   mounted() {
     this.loadUser();
