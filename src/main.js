@@ -39,13 +39,11 @@ import 'uikit/dist/css/uikit.min.css';
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 
-
 import 'uikit';
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import Vuex from "vuex";
-
 
 
 createApp(App)

@@ -63,11 +63,10 @@
                              :showYear="false"
                              :disablePastDays="true"/>
       </div>
+      <h2 v-if="piecesOnDate.length === 0">На выбранную дату ничего не найдено</h2>
     </div>
     <div></div>
   </div>
-
-  <h1 v-if="piecesOnDate.length === 0">На выбранную дату ничего не найдено</h1>
 
 <div class="uk-grid-collapse uk-child-width-expand@s uk-flex uk-flex-center" uk-grid>
     <v-card

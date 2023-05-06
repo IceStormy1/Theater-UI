@@ -61,7 +61,13 @@
         </span>
 
         <span class="p-float-label" id="test">
-           <Dropdown v-model="user.gender" :options="genders" showClear optionLabel="name" class="w-full md:w-12rem" inputId="gender"/>
+           <Dropdown v-model="user.gender"
+                     :options="genders"
+                     showClear
+                     optionLabel="name"
+                     optionValue="code"
+                     class="w-full md:w-12rem"
+                     inputId="gender"/>
           <label for="gender">Пол</label>
         </span>
 
@@ -75,7 +81,7 @@
 
 <script>
 
-import User from '../models/user';
+import User from '../../models/user';
 import Password from 'primevue/password';
 import Button from 'primevue/button';
 import InputText from 'primevue/inputtext';
@@ -83,7 +89,9 @@ import Calendar from 'primevue/Calendar';
 import Dropdown from 'primevue/dropdown';
 import InputMask from 'primevue/inputmask';
 import InputNumber from 'primevue/inputnumber';
+import Gender from '../../models/gender'
 
+import {useToast} from "vue-toastification";
 import {ref} from 'vue';
 
 // todo mounted
@@ -92,10 +100,6 @@ let year = today.getFullYear();
 
 const minDate = ref(new Date());
 const maxDate = ref(new Date());
-const genders = ref([
-  {name: 'Мужской', code: 1},
-  {name: 'Женский', code: 2},
-]);
 
 minDate.value.setMonth(1);
 minDate.value.setFullYear(year - 100);
@@ -111,7 +115,7 @@ export default {
       message: '',
       minDate: minDate,
       maxDate: maxDate,
-      genders: genders
+      genders: Gender.genders,
     };
   },
   components: {
@@ -140,14 +144,18 @@ export default {
           _ => {
             this.$store.dispatch('auth/login', this.user);
             this.$router.push('/');
+
+            const toast = useToast();
+            toast.success('Благодарим за регистрацию!');
           },
           error => {
             this.loading = false;
-            console.log(error.response)
-            // todo переделать красиво
+
+            const toast = useToast();
+
             let errorMessage = error.response.data.errors == null ? error.response.data.title : Object.values(error.response.data.errors)[0][0]
 
-            alert(errorMessage)
+            toast.error(errorMessage);
           }
       );
     }

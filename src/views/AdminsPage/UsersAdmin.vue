@@ -1,52 +1,63 @@
 <template>
 
-<!--  <button class="uk-button uk-button-default uk-margin-small-right" type="button" uk-toggle="target: #modal-create-position">Создать сотрудника</button>-->
+  <!--  <button class="uk-button uk-button-default uk-margin-small-right" type="button" uk-toggle="target: #modal-create-position">Создать сотрудника</button>-->
 
-<!--  &lt;!&ndash; Модальное окно создания сотрудника &ndash;&gt;-->
-<!--  <div id="modal-create-position" ref="position-create" uk-modal>-->
-<!--    <div class="uk-modal-dialog uk-modal-body">-->
-<!--      <h2 class="uk-modal-title">Создание должности</h2>-->
+  <!--  &lt;!&ndash; Модальное окно создания сотрудника &ndash;&gt;-->
+  <!--  <div id="modal-create-position" ref="position-create" uk-modal>-->
+  <!--    <div class="uk-modal-dialog uk-modal-body">-->
+  <!--      <h2 class="uk-modal-title">Создание должности</h2>-->
 
-<!--      <div class="flex flex-column gap-2">-->
-<!--        <label for="positionName">Название позиции </label>-->
-<!--        <InputText id="positionName" v-model="creatingPosition.positionName" />-->
-<!--        <small id="username-help">Введите название позиции</small>-->
-<!--      </div>-->
+  <!--      <div class="flex flex-column gap-2">-->
+  <!--        <label for="positionName">Название позиции </label>-->
+  <!--        <InputText id="positionName" v-model="creatingPosition.positionName" />-->
+  <!--        <small id="username-help">Введите название позиции</small>-->
+  <!--      </div>-->
 
-<!--      <div class="flex flex-column gap-2">-->
-<!--        <label for="positionType">Название типа позиции</label>-->
-<!--        <InputText id="positionType" v-model="creatingPosition.positionType" />-->
-<!--        <small id="username-help">Введите название типа позиции</small>-->
-<!--      </div>-->
+  <!--      <div class="flex flex-column gap-2">-->
+  <!--        <label for="positionType">Название типа позиции</label>-->
+  <!--        <InputText id="positionType" v-model="creatingPosition.positionType" />-->
+  <!--        <small id="username-help">Введите название типа позиции</small>-->
+  <!--      </div>-->
 
 
-<!--      <p class="uk-text-right">-->
-<!--        <button class="uk-button uk-button-default uk-modal-close" type="button">Закрыть</button>-->
-<!--        <button class="uk-button uk-button-primary" type="button" @click="savePosition">Сохранить</button>-->
-<!--      </p>-->
-<!--    </div>-->
-<!--  </div>-->
+  <!--      <p class="uk-text-right">-->
+  <!--        <button class="uk-button uk-button-default uk-modal-close" type="button">Закрыть</button>-->
+  <!--        <button class="uk-button uk-button-primary" type="button" @click="savePosition">Сохранить</button>-->
+  <!--      </p>-->
+  <!--    </div>-->
+  <!--  </div>-->
 
-  <DataTable :value="users">
+  <DataTable :value="users.items">
     <Column field="id" header="id"></Column>
     <Column field="email" header="email"></Column>
-    <Column field="firstName" header="Имя"></Column>
-    <Column field="lastName" header="Фамилия"></Column>
-    <Column field="middleName" header="Отчество"></Column>
+    <Column field="fullName" header="ФИО"></Column>
     <Column field="phone" header="Номер телефона"></Column>
     <Column field="gender" header="Пол"></Column>
     <Column field="birthDate" header="Дата рождения"></Column>
     <Column header="Действия">
       <template #body="{data}">
-        <button class="uk-button uk-button-primary" @click="loadEditUser(data.id)" uk-toggle="target: #modal-edit-users">Редактировать</button>
-        <button class="uk-button uk-button-danger" @click="deleteUser(data.id)" style="margin-left: 10px;">Удалить</button>
+        <button class="uk-button uk-button-primary" @click="loadEditUser(data.id)"
+                uk-toggle="target: #modal-edit-users">Редактировать
+        </button>
+        <button class="uk-button uk-button-danger" @click="deleteUser(data.id)" style="margin-left: 10px;">Удалить
+        </button>
       </template>
     </Column>
   </DataTable>
 
+  <Paginator :rows="userFilter.limit" :totalRecords="users.total" :rowsPerPageOptions="[5, 10, 20, 30]"
+             @page="onPage($event)">
+    <template #start="slotProps">
+      Всего {{ users.total }} записей
+    </template>
+    <template #end>
 
-  <!-- Модальное окно редактирования сотрудника -->
-  <div id="modal-edit-users" uk-modal ref="modal-edit">
+    </template>
+  </Paginator>
+
+
+  <!-- Модальное окно редактирования пользователя -->
+  <div id="modal-edit-users" uk-modal ref="modal-edit" bg-close="false">
     <div class="uk-modal-dialog uk-modal-body">
       <h2 class="uk-modal-title">Редактирование пользователя</h2>
 
@@ -62,36 +73,52 @@
         <small id="username-help">Можете изменить имя пользователя, не трогайте поле если не хотите менять</small>
       </div>
 
-
       <div class="flex flex-column gap-2">
         <label for="username">Email</label>
-        <InputText id="username" v-model="editableUser.email" />
+        <InputText id="username" v-model="editableUser.email"/>
       </div>
 
       <div class="flex flex-column gap-2">
         <label for="username">Имя</label>
-        <InputText id="username" v-model="editableUser.firstName" />
+        <InputText id="username" v-model="editableUser.firstName"/>
       </div>
 
       <div class="flex flex-column gap-2">
         <label for="username">Фамилия</label>
-        <InputText id="username" v-model="editableUser.lastName" />
+        <InputText id="username" v-model="editableUser.lastName"/>
       </div>
 
       <div class="flex flex-column gap-2">
         <label for="username">Отчество</label>
-        <InputText id="username" v-model="editableUser.middleName" />
+        <InputText id="username" v-model="editableUser.middleName"/>
       </div>
 
+      <div class="flex flex-column gap-2">
+        <label for="birth_date">Дата рождения</label>
+        <Calendar v-model="editableUser.birthDate"
+                  :minDate="minDate"
+                  :appendTo="'#modal-edit-users'"
+                  :maxDate="maxDate"
+                  :manualInput="false"
+                  inputId="birth_date"
+                  showClear/>
+      </div>
 
       <div class="flex flex-column gap-2">
         <label for="username">Номер телефона</label>
-        <InputText id="username" v-model="editableUser.phone" />
+        <InputText id="username" v-model="editableUser.phone"/>
       </div>
 
       <div class="flex flex-column gap-2">
-        <label for="username">Пол</label>
-        <InputText id="username" v-model="editableUser.gender" />
+        <label for="gender">Пол</label>
+        <Dropdown v-model="editableUser.gender"
+                  :options="genders"
+                  optionLabel="name"
+                  optionValue="code"
+                  :appendTo="'#modal-edit-users'"
+                  inputId="gender"
+                  showClear>
+        </Dropdown>
       </div>
 
 
@@ -111,8 +138,27 @@ import Column from 'primevue/column';
 import ColumnGroup from 'primevue/columngroup';
 import Row from 'primevue/row';
 import InputText from 'primevue/inputtext';
+import Gender from '../../models/gender'
+import Dropdown from 'primevue/dropdown';
+import Calendar from 'primevue/Calendar';
+import Paginator from 'primevue/paginator';
+import UserFilter from '../../models/filters/userFilter';
 import {useToast} from "vue-toastification";
 import axios from "axios";
+import UIkit from 'uikit';
+import {ref} from "vue";
+
+// todo mounted
+let today = new Date();
+let year = today.getFullYear();
+
+const minDate = ref(new Date());
+const maxDate = ref(new Date());
+
+minDate.value.setMonth(1);
+minDate.value.setFullYear(year - 100);
+maxDate.value.setMonth(12);
+maxDate.value.setFullYear(year - 14);
 
 export default {
   name: "UsersAdmin",
@@ -122,15 +168,18 @@ export default {
     ColumnGroup,
     Row,
     InputText,
+    UIkit,
+    Dropdown,
+    Calendar,
+    Paginator,
   },
   data() {
     return {
       users: [],
-
-      creatingPosition: {
-        positionName: null,
-        positionType: null
-      },
+      genders: Gender.genders,
+      userFilter: new UserFilter(),
+      minDate: minDate,
+      maxDate: maxDate,
 
       editableUser: {
         id: null,
@@ -142,23 +191,27 @@ export default {
         middleName: null,
         phone: null,
         gender: null,
-        birthDate: "2023-04-30T11:52:19.107Z",
-      }
+        birthDate: null
+      },
     }
   },
 
   methods: {
     editUser() {
-      axios.put('admin/user/' + this.editableUser.id, this.editableUser).then(function (response) {
-        const toast = useToast();
-        toast.success('Пользователь обновлен');
+      axios.put('admin/user/' + this.editableUser.id, this.editableUser)
+          .then((response) => {
+            const toast = useToast();
+            this.getUserList();
 
-      }).catch(function (error) {
-        const toast = useToast();
+            UIkit.modal('#modal-edit-users').hide();
+            toast.success('Пользователь обновлен');
+          })
+          .catch(function (error) {
+            const toast = useToast();
 
-        toast.error('ошибка');
-        console.log(error);
-      })
+            toast.error('ошибка');
+            console.log(error);
+          })
     },
 
     loadEditUser(id) {
@@ -175,11 +228,15 @@ export default {
       let config = {
         method: 'get',
         url: 'admin/user/parameters',
+        params: {
+          limit: this.userFilter.limit,
+          offset: this.userFilter.offset,
+        }
       };
 
       this.axios(config)
           .then((response) => {
-            this.users = response.data.items;
+            this.users = response.data;
           })
           .catch(function (error) {
             console.log(error);
@@ -188,10 +245,16 @@ export default {
 
     deleteUser: function (id) {
       console.log(id);
-    }
+    },
+    onPage(event) {
+      this.userFilter.limit = event.rows;
+      this.userFilter.offset = event.first;
+
+      this.getUserList()
+    },
   },
   mounted() {
-    this.getUserList()
+    this.getUserList(this.limit)
   }
 }
 </script>
