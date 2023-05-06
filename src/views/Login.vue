@@ -11,7 +11,7 @@
 
         <span class="p-float-label" id="test">
             <InputText id="username" v-model="user.username"/>
-            <label for="username">Логин</label>
+            <label for="username">Логин или почта</label>
         </span>
 
         <span class="p-float-label" id="test">
