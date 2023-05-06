@@ -7,7 +7,7 @@
       <div class="uk-card uk-card-default uk-card-body">
 
         <div class="avatar-upload">
-          <div class="avatar-selector" v-if="!imageSrc">
+          <div class="avatar-selector" v-if="!imageSrc && isCurrentUserOpened()">
             <label>
               <input type="file" @change="onFileChange" style="display:none" accept="image/*">
               <div>
@@ -15,6 +15,10 @@
                 <span class="uk-text-middle">Загрузить</span>
               </div>
             </label>
+          </div>
+          <div class="avatar-preview" v-else-if="!isCurrentUserOpened()">
+            <div class="avatar-preview-img" :style="{ 'background-image': 'url(//ssl.gstatic.com/accounts/ui/avatar_2x.png)' }">
+            </div>
           </div>
           <div class="avatar-preview" v-else>
             <div class="avatar-preview-img" :style="{ 'background-image': 'url(' + imageSrc + ')' }">
@@ -31,16 +35,14 @@
     <div class="uk-width-1-3@m">
 
       <Card>
-        <template #title>
+        <template #title v-if="isCurrentUserOpened()">
          Ваш профиль
           <a uk-toggle="target: #modal-edit-users" style="color: #708090">
             <span class="pi pi-user-edit" style="font-size: 1.5rem"></span>
           </a>
-<!--          <Button icon="pi pi-user-edit"-->
-<!--                  severity="secondary"-->
-<!--                  size="large"-->
-<!--                  uk-toggle="target: #modal-edit-users"-->
-<!--                  text rounded  />-->
+        </template>
+        <template #title v-else>
+          Профиль {{currentUser.userName}}
         </template>
         <template #content>
 
@@ -131,7 +133,6 @@
           </Dropdown>
         </div>
 
-
         <p class="uk-text-right">
           <button class="uk-button uk-button-default uk-modal-close" type="button">Закрыть</button>
           <button class="uk-button uk-button-primary" type="button" @click="editUser">Сохранить</button>
@@ -139,6 +140,23 @@
       </div>
 
     </div>
+
+    <DataTable v-if="isCurrentUserOpened()" :value="userTickets.items">
+      <Column field="pieceName" header="Название спектакля"></Column>
+      <Column field="pieceDate" header="Дата">
+        <template #body="slotProps">
+          {{ formatDate(slotProps.data.pieceDate, 'DD.MM.YYYY') }}
+        </template>
+      </Column>
+      <Column field="dateOfPurchase" header="Дата покупки">
+        <template #body="slotProps">
+          {{ formatDate(slotProps.data.dateOfPurchase, 'DD.MM.YYYY') }}
+        </template>
+      </Column>
+      <Column field="ticketRow" header="Ряд">123</Column>
+      <Column field="ticketPlace" header="Место"></Column>
+      <Column field="ticketPrice" header="Стоимость билета"></Column>
+    </DataTable>
 
   </div>
 </template>
@@ -160,9 +178,10 @@ import Gender from '../../models/gender'
 import Dropdown from 'primevue/dropdown';
 import Calendar from 'primevue/Calendar';
 import Paginator from 'primevue/paginator';
-import UserFilter from '../../models/filters/userFilter';
+import UserTicketsFilter from '../../models/filters/userTicketsFilter';
 import axios from "axios";
 import UIkit from 'uikit';
+import UserFilter from "../../models/filters/userFilter";
 
 // todo mounted
 let today = new Date();
@@ -196,6 +215,7 @@ export default {
     return {
       imageSrc: null,
       file: null,
+      ticketFilter: new UserTicketsFilter(),
       currentUser: {
         id: null,
         userName: null,
@@ -209,9 +229,26 @@ export default {
         birthDate: "2023-04-30T11:52:19.107Z",
         photo: null
       },
+      userTickets:{
+        total: 0,
+        items: [
+          {
+            id: null,
+            pieceId: null,
+            pieceName: null,
+            pieceDateId: null,
+            pieceDate: null,
+            dateOfPurchase: null,
+            userId: null,
+            ticketPriceEventsId: null,
+            ticketPriceEventsVersion: 1
+          }
+        ]
+      },
       minDate: minDate,
       maxDate: maxDate,
       genders: Gender.genders,
+      userIdFromRoute: this.$route.params.id,
     }
   },
   methods: {
@@ -282,31 +319,30 @@ export default {
     },
 
     loadUser() {
-      let id = this.$route.params.id;
-      console.log(id);
       let config = {
         method: 'get',
-        url: 'account/user/' + id,
+        url: 'account/user/' + this.userIdFromRoute,
       };
 
       this.axios(config)
           .then((response) => {
-            console.log(response);
             this.currentUser = response.data;
             this.imageSrc = this.currentUser.photo.directUrl;
-            console.log(this.currentUser);
 
+            this.loadUserTickets();
           })
           .catch(function (error) {
             console.log(error);
           });
     },
+
     formatDate(dateString, format){
       console.log(dateString);
       const date = dayjs(dateString);
       // Then specify how you want your dates to be formatted
       return date.format(format);
     },
+
     editUser() {
       axios.put('account/' + this.currentUser.id + '/update', this.currentUser)
           .then((response) => {
@@ -323,6 +359,38 @@ export default {
             console.log(error);
           })
     },
+
+    isCurrentUserOpened(){
+      let userIdFromLocalStorage = localStorage.getItem('id');
+
+      console.log('localstorage ' + userIdFromLocalStorage);
+      console.log('route ' + this.userIdFromRoute);
+      console.log('equal ' + userIdFromLocalStorage === this.userIdFromRoute);
+
+      return userIdFromLocalStorage === this.userIdFromRoute;
+    },
+
+    loadUserTickets(){
+      // Если открываем другого пользователя, то не подгружаем его купленные билеты
+      if(!this.isCurrentUserOpened())
+        return;
+
+      this.ticketFilter.userId = this.userIdFromRoute;
+
+      let config = {
+        method: 'get',
+        url: 'account/user/tickets',
+        params: this.ticketFilter
+      };
+
+      this.axios(config)
+          .then((response) => {
+            this.userTickets = response.data;
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+    }
   },
   mounted() {
     this.loadUser();
