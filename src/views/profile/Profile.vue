@@ -431,10 +431,6 @@ export default {
     isCurrentUserOpened(){
       let userIdFromLocalStorage = localStorage.getItem('id');
 
-      console.log('localstorage ' + userIdFromLocalStorage);
-      console.log('route ' + this.userIdFromRoute);
-      console.log('equal ' + userIdFromLocalStorage === this.userIdFromRoute);
-
       return userIdFromLocalStorage === this.userIdFromRoute;
     },
 
