@@ -155,10 +155,69 @@
       </Column>
       <Column field="ticketRow" header="Ряд">123</Column>
       <Column field="ticketPlace" header="Место"></Column>
-      <Column field="ticketPrice" header="Стоимость билета"></Column>
+      <Column field="ticketPrice" header="Стоимость билета">
+        <template #body="slotProps">
+          {{ slotProps.data.ticketPrice }} руб
+        </template>
+      </Column>
+      <Paginator :rows="ticketFilter.limit" :totalRecords="userTickets.total" :rowsPerPageOptions="[5, 10, 20, 30]"
+                 @page="onPage($event)">
+        <template #start="slotProps">
+          Всего {{ userTickets.total }} записей
+        </template>
+        <template #end>
+
+        </template>
+      </Paginator>
     </DataTable>
 
   </div>
+
+  <div class="uk-grid-collapse uk-flex uk-flex-center" uk-grid style="margin: 40px">
+    <h2>Рецензии пользователя</h2>
+  </div>
+
+  <div class="uk-grid-collapse uk-child-width-expand@s uk-flex uk-flex-center" uk-grid>
+    <v-card
+        v-for="review in userReviews.items"
+        class="mx-6"
+        max-width="400"
+    >
+
+      <v-card-item>
+        <h3>{{review.title}}</h3>
+
+        <v-card-subtitle>
+          <a @click="redirectToPiece(review.pieceId)" style="color: #708090">
+            <span class="me-6" href="/piece">{{review.pieceName}}</span>
+          </a>
+        </v-card-subtitle>
+
+      </v-card-item>
+
+      <v-card-text>
+        <v-row
+            align="center"
+            class="mx-0"
+        >
+          <v-rating
+              :model-value="4.5"
+              color="amber"
+              density="compact"
+              half-increments
+              readonly
+              size="small"
+          ></v-rating>
+        </v-row>
+
+        <div v-html="replaceBr(review.description)"></div>
+      </v-card-text>
+
+      <v-divider class="mx-4 mb-1"></v-divider>
+    </v-card>
+
+  </div>
+
 </template>
 
 <script>
@@ -182,6 +241,7 @@ import UserTicketsFilter from '../../models/filters/userTicketsFilter';
 import axios from "axios";
 import UIkit from 'uikit';
 import UserFilter from "../../models/filters/userFilter";
+import UserReview from "../../models/userReview";
 
 // todo mounted
 let today = new Date();
@@ -216,6 +276,7 @@ export default {
       imageSrc: null,
       file: null,
       ticketFilter: new UserTicketsFilter(),
+      userReviewFilter: new UserTicketsFilter(),
       currentUser: {
         id: null,
         userName: null,
@@ -243,6 +304,12 @@ export default {
             ticketPriceEventsId: null,
             ticketPriceEventsVersion: 1
           }
+        ]
+      },
+      userReviews: {
+        total: 0,
+        items: [
+            new UserReview()
         ]
       },
       minDate: minDate,
@@ -330,6 +397,7 @@ export default {
             this.imageSrc = this.currentUser.photo.directUrl;
 
             this.loadUserTickets();
+            this.loadUserReviews();
           })
           .catch(function (error) {
             console.log(error);
@@ -390,6 +458,40 @@ export default {
           .catch(function (error) {
             console.log(error);
           });
+    },
+
+    loadUserReviews(){
+      this.userReviewFilter.userId = this.userIdFromRoute;
+
+      let config = {
+        method: 'get',
+        url: 'user/review/list',
+        params: this.userReviewFilter
+      };
+
+      this.axios(config)
+          .then((response) => {
+            this.userReviews = response.data;
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+    },
+
+    onPage(event) {
+      this.userTickets.limit = event.rows;
+      this.userTickets.offset = event.first;
+
+      this.loadUserTickets()
+    },
+
+    redirectToPiece(pieceId){
+      this.$router.push('/spectacle/' + pieceId);
+    },
+
+    replaceBr(text){
+
+      return text === null ? text : text.replace(/\n/g, "<br/>")
     }
   },
   mounted() {
