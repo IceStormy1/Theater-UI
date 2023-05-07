@@ -27,7 +27,7 @@
           </div>
         </div>
         <button v-if="file" class="uk-button uk-button-primary" @click.prevent="submitForm">
-          Submit
+          Сохранить
         </button>
 
       </div>
@@ -58,7 +58,7 @@
             <dt>Отчество</dt>
             <dd> {{ currentUser.middleName }}</dd>
             <dt>Дата рождения</dt>
-            <dd> {{formatDate(currentUser.birthDate, 'DD.MM.YYYY')}}</dd>
+            <dd> {{dateHelper.formatDate(currentUser.birthDate, 'DD.MM.YYYY')}}</dd>
             <dt>Пол</dt>
             <dd> {{ currentUser.gender }}</dd>
             <dt>Телефон</dt>
@@ -145,12 +145,12 @@
       <Column field="pieceName" header="Название спектакля"></Column>
       <Column field="pieceDate" header="Дата">
         <template #body="slotProps">
-          {{ formatDate(slotProps.data.pieceDate, 'DD.MM.YYYY') }}
+          {{ dateHelper.formatDate(slotProps.data.pieceDate, 'DD.MM.YYYY') }}
         </template>
       </Column>
       <Column field="dateOfPurchase" header="Дата покупки">
         <template #body="slotProps">
-          {{ formatDate(slotProps.data.dateOfPurchase, 'DD.MM.YYYY') }}
+          {{ dateHelper.formatDate(slotProps.data.dateOfPurchase, 'DD.MM.YYYY') }}
         </template>
       </Column>
       <Column field="ticketRow" header="Ряд">123</Column>
@@ -210,7 +210,7 @@
           ></v-rating>
         </v-row>
 
-        <div v-html="replaceBr(review.description)"></div>
+        <div v-html="textHelper.replaceBr(review.description)"></div>
       </v-card-text>
 
       <v-divider class="mx-4 mb-1"></v-divider>
@@ -226,7 +226,6 @@ import Card from 'primevue/card';
 import Button from 'primevue/button';
 import 'primeicons/primeicons.css';
 import {useToast} from "vue-toastification";
-import dayjs from "dayjs";
 import {ref} from "vue";
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
@@ -234,14 +233,16 @@ import ColumnGroup from 'primevue/columngroup';
 import Row from 'primevue/row';
 import InputText from 'primevue/inputtext';
 import Gender from '../../models/gender'
+import DateHelper from '../../services/helpers/dateHelper'
 import Dropdown from 'primevue/dropdown';
 import Calendar from 'primevue/Calendar';
 import Paginator from 'primevue/paginator';
 import UserTicketsFilter from '../../models/filters/userTicketsFilter';
 import axios from "axios";
 import UIkit from 'uikit';
-import UserFilter from "../../models/filters/userFilter";
 import UserReview from "../../models/userReview";
+import UserReviewFilter from "../../models/filters/userReviewFilter";
+import TextHelper from "../../services/helpers/textHelper";
 
 // todo mounted
 let today = new Date();
@@ -276,7 +277,8 @@ export default {
       imageSrc: null,
       file: null,
       ticketFilter: new UserTicketsFilter(),
-      userReviewFilter: new UserTicketsFilter(),
+      userReviewFilter: new UserReviewFilter(),
+      dateHelper: DateHelper,
       currentUser: {
         id: null,
         userName: null,
@@ -314,6 +316,7 @@ export default {
       },
       minDate: minDate,
       maxDate: maxDate,
+      textHelper: TextHelper,
       genders: Gender.genders,
       userIdFromRoute: this.$route.params.id,
     }
@@ -404,13 +407,6 @@ export default {
           });
     },
 
-    formatDate(dateString, format){
-      console.log(dateString);
-      const date = dayjs(dateString);
-      // Then specify how you want your dates to be formatted
-      return date.format(format);
-    },
-
     editUser() {
       axios.put('account/' + this.currentUser.id + '/update', this.currentUser)
           .then((response) => {
@@ -485,10 +481,6 @@ export default {
       this.$router.push('/spectacle/' + pieceId);
     },
 
-    replaceBr(text){
-
-      return text === null ? text : text.replace(/\n/g, "<br/>")
-    }
   },
   mounted() {
     this.loadUser();
