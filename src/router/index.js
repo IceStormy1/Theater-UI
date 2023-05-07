@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import Login from '../views/authorization/Login.vue';
 import Register from '../views/authorization/Register.vue';
 import Profile from '../views/profile/Profile.vue';
+import Spectacle from '../views/spectacle/Spectacle.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +40,10 @@ const router = createRouter({
     {
       path: '/profile/:id',
       component: Profile
+    },
+    {
+      path: '/spectacle/:id',
+      component: Spectacle
     },
     {
       path: '/home',
