@@ -199,7 +199,6 @@ export default {
       let actors = [];
 
       workerShortInformation.forEach(x => {
-        console.log(x)
         if (x.positionType === positionType)
           actors.push(x);
       });
@@ -208,7 +207,6 @@ export default {
     },
 
     formatDate(dateString, format){
-      console.log(dateString);
       const date = dayjs(dateString);
       // Then specify how you want your dates to be formatted
       return date.format(format);

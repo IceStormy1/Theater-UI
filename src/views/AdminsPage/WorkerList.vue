@@ -107,6 +107,34 @@
     <!--bg-close = false иначе при выборе значения в дроп-дауна закрывается модалка-->
     <div class="uk-modal-dialog uk-modal-body">
       <h2 class="uk-modal-title">Редактирование сотрудника</h2>
+      <v-container>
+        <v-row>
+          <v-col cols="4"></v-col>
+          <v-col cols="7">
+      <div class="avatar-upload">
+
+
+        <div class="avatar-selector" v-if="!imageSrc">
+          <label>
+            <input type="file" @change="onFileChange" style="display:none" accept="image/*">
+            <div>
+              <span uk-icon="icon: cloud-upload"></span>
+              <span class="uk-text-middle">Загрузить</span>
+            </div>
+          </label>
+        </div>
+        <div class="avatar-preview" v-else>
+          <div class="avatar-preview-img" :style="{ 'background-image': 'url(' + imageSrc + ')' }">
+            <button class="uk-modal-close-default" type="button" aria-label="Close" uk-close @click="deleteImage"></button>
+          </div>
+        </div>
+
+
+      </div>
+          </v-col>
+        </v-row>
+
+      </v-container>
 
       <div class="flex flex-column gap-2">
         <label for="username">Идентификатор пользователя</label>
@@ -188,6 +216,7 @@
 <script>
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import Button from 'primevue/button';
 import ColumnGroup from 'primevue/columngroup';
 import Row from 'primevue/row';
 import InputText from 'primevue/inputtext';
@@ -197,6 +226,7 @@ import Calendar from 'primevue/Calendar';
 import Paginator from 'primevue/paginator';
 import UserFilter from '../../models/filters/userFilter';
 import {useToast} from "vue-toastification";
+import 'primeicons/primeicons.css';
 import axios from "axios";
 import UIkit from 'uikit';
 import {ref} from "vue";
@@ -224,6 +254,7 @@ export default {
     Dropdown,
     Calendar,
     Paginator,
+    Button,
     UIkit,
   },
   data() {
@@ -240,6 +271,8 @@ export default {
       genders: Gender.genders,
       workerPositions: null,
       userFilter: new UserFilter(),
+      imageSrc: null,
+      file: null,
       minDate: minDate,
       maxDate: maxDate,
 
@@ -254,6 +287,7 @@ export default {
         positionId: null,
         positionType: null,
         positionTypeName: null,
+        mainPhoto: null,
       }
     }
   },
@@ -276,7 +310,6 @@ export default {
 
             UIkit.modal('#modal-example').hide();
             toast.success('Пользователь создан');
-            console.log(response);
           })
     },
 
@@ -300,6 +333,7 @@ export default {
     loadEditWorker(id) {
       axios.get('worker/' + id).then((response) => {
         this.editableWorker = response.data;
+        this.imageSrc = response.data.mainPhoto?.directUrl;
       })
     },
 
@@ -310,6 +344,7 @@ export default {
         params: {
           limit: this.userFilter.limit,
           offset: this.userFilter.offset,
+          sortColumn: 'id'
         },
       };
 
@@ -340,11 +375,49 @@ export default {
           });
     },
     onPage(event) {
-      console.log(event);
       this.userFilter.limit = event.rows;
       this.userFilter.offset = event.first;
 
       this.getWorkerList()
+    },
+    onFileChange(event) {
+      const files = event.target.files
+      if (files && files.length > 0) {
+        const file = files[0]
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          this.imageSrc = e.target.result
+        }
+        reader.readAsDataURL(file)
+
+        this.file = file;
+
+        let bodyFormData = new FormData();
+        bodyFormData.append('file', this.file);
+
+        axios.post('/filestorage?bucketId=2', bodyFormData)
+            .then((response) => {
+              this.editableWorker.mainPhoto = response.data
+            })
+            .catch(function () {
+              const toast = useToast();
+
+              toast.error('Ошибка при загрузке фото');
+            });
+      }
+    },
+    deleteImage() {
+      const toast = useToast();
+      axios.delete('/filestorage/' + this.editableWorker.mainPhoto.id)
+          .then((respone) => {
+            this.editableWorker.mainPhoto = null;
+            this.imageSrc = null;
+
+            this.editWorker();
+          })
+          .catch(function (error) {
+            toast.error('Произошла ошибка при удалении фотографии: ' + error.title);
+          })
     },
   },
   mounted() {

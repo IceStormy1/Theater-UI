@@ -4,6 +4,7 @@ import Login from '../views/authorization/Login.vue';
 import Register from '../views/authorization/Register.vue';
 import Profile from '../views/profile/Profile.vue';
 import Spectacle from '../views/spectacle/Spectacle.vue';
+import Worker from '../views/worker/Worker.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +45,10 @@ const router = createRouter({
     {
       path: '/spectacle/:id',
       component: Spectacle
+    },
+    {
+      path: '/worker/:id',
+      component: Worker
     },
     {
       path: '/home',

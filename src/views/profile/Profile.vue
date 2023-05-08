@@ -362,9 +362,6 @@ export default {
     },
 
     submitForm() {
-      // Here you can add your form submission logic
-      console.log("Avatar: ", this.file);
-
       let bodyFormData = new FormData();
       bodyFormData.append('file', this.file);
 
