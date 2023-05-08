@@ -8,28 +8,28 @@
       <router-view/>
     </div>
 
-<!--    <v-footer class="bg-grey-lighten-1">-->
-<!--      <v-row justify="center" no-gutters>-->
-<!--        <v-col class="text-center mt-4" cols="12">-->
-<!--          {{ new Date().getFullYear() }} — <strong>Театр теней</strong>-->
-<!--        </v-col>-->
-<!--      </v-row>-->
-<!--    </v-footer>-->
+    <v-footer class="bg-grey-lighten-1">
+      <v-row justify="center" no-gutters>
+        <v-col class="text-center mt-4" cols="12">
+          {{ new Date().getFullYear() }} — <strong>Театр теней</strong>
+        </v-col>
+      </v-row>
+    </v-footer>
 
-<!--    <yandex-map-->
-<!--        ref="map"-->
-<!--        :coords="coords"-->
-<!--        zoom="20"-->
-<!--        style="width: 100%; height: 600px"-->
-<!--        :controls="[]"-->
-<!--        :settings="settings"-->
-<!--    >-->
-<!--      <ymap-marker-->
-<!--          marker-id="123"-->
-<!--          :coords="coords"-->
-<!--          :icon="markerIcon"-->
-<!--      />-->
-<!--    </yandex-map>-->
+    <yandex-map
+        ref="map"
+        :coords="coords"
+        zoom="20"
+        style="width: 100%; height: 600px"
+        :controls="[]"
+        :settings="settings"
+    >
+      <ymap-marker
+          marker-id="123"
+          :coords="coords"
+          :icon="markerIcon"
+      />
+    </yandex-map>
 
   </v-app>
 
