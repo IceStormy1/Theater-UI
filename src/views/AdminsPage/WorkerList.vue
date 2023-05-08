@@ -259,6 +259,7 @@ export default {
   },
   methods: {
     saveWorker() {
+      // todo ну и бредятина это я походу пьяным писал , над переделать , просто класть массив
       axios.post('admin/theaterworker', {
         firstName: this.$data.firstName,
         lastName: this.$data.lastname,
@@ -287,8 +288,6 @@ export default {
 
             UIkit.modal('#modal-edit-worker').hide();
             toast.success('Пользователь обновлен');
-
-            console.log(response);
           })
           .catch(function (error) {
             const toast = useToast();

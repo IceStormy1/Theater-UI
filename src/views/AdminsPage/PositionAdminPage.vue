@@ -131,15 +131,13 @@ export default {
 
   methods: {
     savePosition() {
-      axios.post('admin/position', this.creatingPosition).then((response) => {
+      axios.post('admin/position', this.creatingPosition).then(() => {
         const toast = useToast();
 
         this.getPositionList();
 
         UIkit.modal('#modal-create-position').hide();
         toast.success('Должность создана');
-
-        console.log(response);
       })
     },
 
@@ -161,7 +159,6 @@ export default {
     },
 
     loadEditPosition(id, positionName, positionType) {
-      console.log(positionType)
       this.editablePositions.id = id;
       this.editablePositions.positionName = positionName;
       this.editablePositions.positionType = positionType;

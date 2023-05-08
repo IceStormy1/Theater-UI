@@ -216,7 +216,6 @@ export default {
 
     loadEditUser(id) {
       axios.get('account/user/' + id).then((response) => {
-        console.log(response.data);
         this.editableUser = response.data;
       })
       // this.editableUser.id = id;

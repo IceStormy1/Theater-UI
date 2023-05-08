@@ -14,10 +14,11 @@
     </TabPanel>
 
     <TabPanel header="Пьесы">
-      <p>
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim
-        ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius modi.
-      </p>
+      <PlayList />
+    </TabPanel>
+
+    <TabPanel header="Жанры">
+      <GenreList />
     </TabPanel>
 
   </TabView>
@@ -29,7 +30,9 @@ import TabPanel from 'primevue/TabPanel'
 import TabView from 'primevue/TabView'
 import WorkerList from './WorkerList.vue'
 import UsersAdmin from './UsersAdmin.vue'
+import GenreList from './GenreList.vue'
 import PositionAdminPage from './PositionAdminPage.vue'
+import PlayList from './PlayList.vue'
 
 export default {
   name: 'Admin',
@@ -39,7 +42,9 @@ export default {
     TabView,
     WorkerList,
     UsersAdmin,
-    PositionAdminPage
+    PositionAdminPage,
+    PlayList,
+    GenreList,
   }
 }
 </script>
