@@ -134,8 +134,6 @@ export default {
       this.axios(config)
           .then((response) => {
             this.genreList = response.data.items;
-            console.log(response.data.items)
-            console.log(this.genreList);
           })
           .catch(function (error) {
             console.log(error);
