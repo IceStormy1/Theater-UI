@@ -129,7 +129,7 @@ export default {
 
   data() {
     return {
-      pieceFull: new PieceFull,
+      pieceFull: new PieceFull(),
       pieceIdFromRoute: this.$route.params.id,
       userReviewFilter: new UserReviewFilter(),
       tickets: [
@@ -173,9 +173,6 @@ export default {
     },
 
     loadTickets(pieceId, dateId, date) {
-      console.log(date)
-      console.log('pieceId ' + pieceId)
-
       let config = {
         method: 'get',
         url: 'ticket/' + pieceId + '/date/' + dateId,

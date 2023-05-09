@@ -138,6 +138,8 @@ export default {
 
         UIkit.modal('#modal-create-position').hide();
         toast.success('Должность создана');
+
+        //console.log(response);
       })
     },
 

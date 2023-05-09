@@ -47,7 +47,7 @@ export default {
 
     submitForm() {
       // Here you can add your form submission logic
-      console.log("Avatar: ", this.file);
+      //console.log("Avatar: ", this.file);
       UIkit.notification({
         message: "Form submitted successfully!",
         status: "success",
@@ -56,9 +56,6 @@ export default {
   }
 }
 </script>
-
-
-
 
 <style>
 .avatar-upload {
