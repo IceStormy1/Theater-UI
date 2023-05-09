@@ -81,7 +81,8 @@ export default {
             label: 'Перейти к профилю',
             //command: () => this.$router.push('/profile/' + this.userId)
             to: '/profile/' + this.userId,
-          }, {
+          },
+          {
             label: 'Админка',
             command: () => this.$router.push('/admin/')
           },
