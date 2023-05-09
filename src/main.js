@@ -35,7 +35,7 @@ import './axios';
 library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt);
 
 import 'uikit/dist/css/uikit.min.css';
-
+import BookTicket from "../src/components/BookTicket.vue";
 import Toast from "vue-toastification";
 import "vue-toastification/dist/index.css";
 
@@ -48,6 +48,7 @@ import Vuex from "vuex";
 
 createApp(App)
     .component('font-awesome-icon', FontAwesomeIcon)
+    .component('BookTicket', BookTicket)
     .use(router)
     .use(store)
     .use(PrimeVue)
