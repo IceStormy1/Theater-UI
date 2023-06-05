@@ -79,7 +79,7 @@
     <Column field="fullName" header="ФИО"></Column>
     <Column field="positionName" header="Должность"></Column>
     <Column field="positionTypeName" header="Тип должности"></Column>
-    <Column header="Actions">
+    <Column header="Действия">
       <template #body="{data}">
         <button class="uk-button uk-button-primary"
                 @click="loadEditWorker(data.id)"
@@ -137,15 +137,14 @@
       </v-container>
 
       <div class="flex flex-column gap-2">
-        <label for="username">Идентификатор пользователя</label>
+        <label for="username">Идентификатор сотрудника</label>
+        <small id="username-help">Идентификатор сотрудника. Недоступно для редактирования</small>
         <InputText disabled id="username" v-model="editableWorker.id"/>
-        <small id="username-help">Идентификатор пользователя нельзя редактировать</small>
       </div>
 
       <div class="flex flex-column gap-2">
         <label for="username">Имя пользователя</label>
         <InputText id="username" v-model="editableWorker.firstName"/>
-        <small id="username-help">Можете изменить имя пользователя, не трогайте поле если не хотите менять</small>
       </div>
 
       <div class="flex flex-column gap-2">
@@ -166,6 +165,7 @@
                   :maxDate="maxDate"
                   :manualInput="false"
                   inputId="birth_date"
+                  dateFormat="dd.mm.yy"
                   showClear/>
       </div>
 

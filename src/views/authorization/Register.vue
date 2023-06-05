@@ -15,7 +15,7 @@
         </span>
 
         <span class="p-float-label" id="test">
-            <Password v-model="user.password" inputId="password">
+            <Password v-model="user.password" inputId="password" weakLabel="ПРостой" mediumLabel="Средний" strongLabel="Высокий">
                <template #footer>
                     <Divider/>
                     <p class="mt-2">Требования:</p>
@@ -51,12 +51,13 @@
         </span>
 
         <span class="p-float-label" id="test">
-            <Calendar v-model="user.birthDate" :minDate="minDate" :maxDate="maxDate" :manualInput="false" inputId="birth_date"/>
+            <Calendar v-model="user.birthDate" :minDate="minDate" :maxDate="maxDate" :manualInput="false" inputId="birth_date" dateFormat="dd.mm.yy"/>
             <label for="birth_date">Дата рождения</label>
         </span>
 
         <span class="p-float-label" id="test">
-            <InputNumber v-model="user.phone" placeholder="+7 (999) 999-99-99" inputId="phone"></InputNumber>
+<!--            <InputNumber v-model="user.phone" placeholder="+7 (999) 999-99-99" inputId="phone" :format="true"></InputNumber>-->
+           <InputMask v-model="user.phone" date="phone" mask="+9 (999) 999-99-99" placeholder="+7 (999) 999-99-99" :unmask="true"/>
           <label for="phone">Номер телефона</label>
         </span>
 
@@ -118,28 +119,18 @@ export default {
       genders: Gender.genders,
     };
   },
-  components: {
-    Password,
-    Button,
-    InputText,
-    Calendar,
-    Dropdown,
-    InputMask,
-    InputNumber,
+  components: { Password, Button, InputText, Calendar, Dropdown, InputMask, InputNumber,
   },
   computed: {
-    loggedIn() {
-      return this.$store.state.auth.status.loggedIn;
-    }
+    loggedIn() { return this.$store.state.auth.status.loggedIn; }
   },
   mounted() {
-    if (this.loggedIn) {
-      this.$router.push('/profile');
-    }
+    if (this.loggedIn) {this.$router.push('/profile');}
   },
   methods: {
     handleRegister() {
       this.loading = true;
+
       this.$store.dispatch('auth/register', this.user).then(
           _ => {
             this.$store.dispatch('auth/login', this.user);
@@ -198,7 +189,7 @@ label {
 }
 
 .p-float-label#test {
-  margin-top: 30px;
+  margin-top: 20px;
   margin-left: auto;
   margin-right: auto
 }

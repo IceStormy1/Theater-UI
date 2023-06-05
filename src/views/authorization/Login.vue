@@ -22,6 +22,28 @@
         <Button class="buttonLogin" type="submit" label="Войти" :loading="loading" @click="load"/>
       </form>
 
+      <v-container>
+      <v-row>
+        <v-col cols="1"></v-col>
+        <div uk-grid style="margin-top: 25px">
+          <p style="text-align: center">Или войти с помощью:</p>
+        </div>
+      </v-row>
+
+        <v-row>
+          <v-col cols="4"></v-col>
+         <v-col cols="3">
+           <a style="color: #708090" @click="loginVk">
+             <v-img
+                 cover
+                 width="35"
+                 src="./src/assets/vk-icon.svg"
+                 style="border-radius: 15px; "
+             ></v-img>
+           </a>
+         </v-col>
+        </v-row>
+      </v-container>
     </div>
   </div>
 
@@ -59,6 +81,9 @@ export default {
     }
   },
   methods: {
+    loginVk(){
+      window.open('https://oauth.vk.com/authorize?client_id=51667378&redirect_url=http://127.0.0.1:5173/login&display=page&response_type=code', '_blank', 'popup');
+    },
     handleLogin() {
       this.loading = true;
       if (this.user.username && this.user.password) {

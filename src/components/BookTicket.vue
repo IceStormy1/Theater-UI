@@ -3,7 +3,7 @@
   <!-- Модальное окно покупки билета -->
 
     <div class="uk-modal-dialog uk-modal-body">
-      <h2 class="uk-modal-title">Купить билеты</h2>
+      <h2 class="uk-modal-title">Купить билеты на дату {{date}}</h2>
 
       <div class="container">
         <div class="row">
@@ -74,6 +74,7 @@ import UIkit from "uikit";
 export default {
   name: "BookTicket",
   props: {
+    date: null,
     tickets: {
       cols: 0,
       rows: 0,

@@ -51,8 +51,8 @@
     </v-row>
 
     <v-row style="margin-top: 40px">
-      <v-col cols="1"></v-col>
-      <v-col cols="3">
+
+      <v-col cols="12">
         <h2>Рецензии пользователей:</h2>
 
         <div class="uk-grid-collapse uk-child-width-expand@s uk-flex uk-flex-center" uk-grid>
