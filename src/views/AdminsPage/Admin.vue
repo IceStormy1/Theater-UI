@@ -13,7 +13,7 @@
       <PositionAdminPage />
     </TabPanel>
 
-    <TabPanel header="Пьесы">
+    <TabPanel header="Спектакли">
       <PlayList />
     </TabPanel>
 

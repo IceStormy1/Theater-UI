@@ -1,4 +1,5 @@
 <template>
+
   <div class="flex flex-column gap-2">
     <label for="playEditableId">Идентификатор пьесы</label>
     <InputText disabled id="playEditableId" v-model="editablePlay.id"/>
@@ -45,9 +46,14 @@ export default {
     }
   },
   props: ['playId'],
-  updated() {
-    // this.loadTextAreas();
+  watch: {
+    playId: {
+      handler: function() {
+        this.loadTextAreas();
+      },
+    }
   },
+
   methods: {
     loadTextAreas() {
       axios.get('/piece/' + this.playId).then((response) => {

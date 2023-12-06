@@ -7,13 +7,14 @@
       <ul class="uk-slider-items uk-child-width-auto@m uk-grid">
 
         <li v-for="item in piecesOnSlider" class="w-5">
-          <div class="uk-card uk-card-default ">
+          <div class="uk-card uk-card-default" style="border-radius: 15px; margin-top: 30px">
             <div class="uk-card-body uk-flex uk-flex-between">
 
               <v-img
                   cover
                   height="400"
                   :src="item.mainPicture.directUrl"
+                  style="border-radius: 15px;"
               ></v-img>
 
               <div class="uk-card-body w-5">
@@ -32,9 +33,12 @@
               </div>
             </div>
             <div>
-              <a><h3 class="uk-card-title hover:bg-yellow-400 uk-width-auto@m" @click="onClickb(item.id)">
+              <a><h3 class="uk-card-title hover:bg-yellow-400 uk-width-auto@m" @click="onClickb(item.id)" style="margin-left: 38px">
                 {{ item.pieceName }}</h3></a>
-              <p>{{ item.shortDescription }}</p>
+              <p style="margin-left: 38px">{{ item.shortDescription }}</p>
+              <v-row>
+                <v-col cols="12"></v-col>
+              </v-row>
             </div>
           </div>
         </li>
@@ -119,7 +123,11 @@
 
       <div class="px-4">
         <v-chip-group v-model="selection">
-          <v-chip v-for="pieceDate in pieceD.pieceDates">{{formatDate(pieceDate.date, 'DD.MM HH:mm')}}</v-chip>
+          <v-chip v-for="pieceDate in pieceD.pieceDates"
+                  uk-toggle="target: #modal-buy-ticket"
+                  @click="loadTickets(pieceDate.pieceId, pieceDate.id, pieceDate.date)">
+            {{formatDate(pieceDate.date, 'DD.MM HH:mm')}}
+          </v-chip>
         </v-chip-group>
       </div>
 
@@ -135,6 +143,11 @@
     </v-card>
 
 </div>
+
+  <!-- Модальное окно покупки билета -->
+  <div id="modal-buy-ticket" uk-modal ref="modal-edit" bg-close="false">
+    <BookTicket :tickets="tickets" :date="selectedDateInModal"></BookTicket>
+  </div>
 </template>
 
 <script>
@@ -149,6 +162,7 @@ import DataViewLayoutOptions from 'primevue/dataviewlayoutoptions'
 import Carousel from 'primevue/carousel'
 import axios from "axios";
 import dayjs from 'dayjs';
+import {useToast} from "vue-toastification";
 
 export default {
   components: {
@@ -162,9 +176,23 @@ export default {
   data() {
     return {
       selectedDate: null,
+      selectedDateInModal: null,
       layout: 'grid',
       piecesOnSlider: [],
       piecesOnDate: () => this.onClickf(),
+      tickets: {
+        cols: 0,
+        rows: 0,
+        items: [
+          {
+            id: null,
+            isBooked: false,
+            ticketPrice: null,
+            ticketPlace: null,
+            ticketRow: null,
+          }
+        ]
+      },
       responsiveOptions: [
         {
           breakpoint: '767px',
@@ -210,7 +238,25 @@ export default {
       const date = dayjs(dateString);
       // Then specify how you want your dates to be formatted
       return date.format(format);
-    }
+    },
+
+    loadTickets(pieceId, dateId, date) {
+      let config = {
+        method: 'get',
+        url: 'ticket/' + pieceId + '/date/' + dateId,
+      };
+
+      this.axios(config)
+          .then((response) => {
+            this.tickets = response.data;
+            this.selectedDateInModal = this.formatDate(date, 'DD.MM HH:mm');
+          })
+          .catch(function (error) {
+            const toast = useToast();
+
+            toast.error(error.response.data.title);
+          });
+    },
   },
 
   mounted() {

@@ -1,6 +1,4 @@
 <template>
-  <!--  <div>Пользователь {{ $route.params.id }}</div>-->
-
   <div class="uk-text-center" uk-grid>
     <div class="uk-width-auto@m">
 
@@ -16,10 +14,7 @@
               </div>
             </label>
           </div>
-          <div class="avatar-preview" v-else-if="!isCurrentUserOpened()">
-            <div class="avatar-preview-img" :style="{ 'background-image': 'url(//ssl.gstatic.com/accounts/ui/avatar_2x.png)' }">
-            </div>
-          </div>
+
           <div class="avatar-preview" v-else>
             <div class="avatar-preview-img" :style="{ 'background-image': 'url(' + imageSrc + ')' }">
               <button class=" uk-flex-right" type="button" aria-label="Close" uk-close @click="deleteImage"></button>
@@ -71,18 +66,11 @@
     <!-- Модальное окно редактирования пользователя -->
     <div id="modal-edit-users" uk-modal ref="modal-edit" bg-close="false">
       <div class="uk-modal-dialog uk-modal-body">
-        <h2 class="uk-modal-title">Редактирование пользователя</h2>
+        <h2 class="uk-modal-title">Редактирование профиля</h2>
 
         <div class="flex flex-column gap-2">
-          <label for="username">id пользователя</label>
-          <InputText disabled id="username" v-model="currentUser.id"/>
-          <small id="username-help">Изменить нельзя</small>
-        </div>
-
-        <div class="flex flex-column gap-2">
-          <label for="username">Логин (username)</label>
+          <label for="username">Логин</label>
           <InputText id="username" v-model="currentUser.userName"/>
-          <small id="username-help">Можете изменить имя пользователя, не трогайте поле если не хотите менять</small>
         </div>
 
         <div class="flex flex-column gap-2">
@@ -394,7 +382,7 @@ export default {
       this.axios(config)
           .then((response) => {
             this.currentUser = response.data;
-            this.imageSrc = this.currentUser.photo.directUrl;
+            this.imageSrc = this.currentUser.photo?.directUrl;
 
             this.loadUserTickets();
             this.loadUserReviews();

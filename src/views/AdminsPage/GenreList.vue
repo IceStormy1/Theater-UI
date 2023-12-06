@@ -70,7 +70,7 @@ import ColumnGroup from "primevue/columngroup";
 import Row from "primevue/row";
 import InputText from "primevue/inputtext";
 import Dropdown from "primevue/dropdown";
-import Calendar from "primevue/calendar";
+import Calendar from "primevue/Calendar";
 import Paginator from "primevue/paginator";
 import axios from "axios";
 import {useToast} from "vue-toastification";

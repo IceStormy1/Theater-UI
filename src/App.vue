@@ -8,7 +8,7 @@
       <router-view/>
     </div>
 
-    <v-footer class="bg-grey-lighten-1">
+    <v-footer class="bg-grey-lighten-1" absolute style="margin-top: 350px">
       <v-row justify="center" no-gutters>
         <v-col class="text-center mt-4" cols="12">
           {{ new Date().getFullYear() }} — <strong>Театр теней</strong>
@@ -81,7 +81,8 @@ export default {
             label: 'Перейти к профилю',
             //command: () => this.$router.push('/profile/' + this.userId)
             to: '/profile/' + this.userId,
-          }, {
+          },
+          {
             label: 'Админка',
             command: () => this.$router.push('/admin/')
           },

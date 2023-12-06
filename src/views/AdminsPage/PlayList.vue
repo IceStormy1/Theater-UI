@@ -67,7 +67,7 @@
     <Column field="pieceName" header="Название пьесы"></Column>
     <Column field="pieceGenre" header="Жанр пьесы"></Column>
     <Column field="shortDescription" header="Краткое описание"></Column>
-    <Column header="Actions">
+    <Column header="Действия">
       <template #body="{data}">
         <button class="uk-button uk-button-primary"
                 @click="loadEditPlay(data.id)"
@@ -92,22 +92,26 @@
 
 <!--   Модальное окно редактирования пьес-->
     <div id="modal-edit-play" uk-modal ref="modal-edit-play" bg-close="false">
-      <TabView :lazy="true">
+      <div class="uk-modal-dialog uk-modal-body">
+        <h2 class="uk-modal-title">Редактирование спектакля</h2>
+        <TabView :lazy="true">
 
-        <TabPanel header="id">
+          <TabPanel header="Основная информация">
             <TextAreaPlayEdit :playId="this.editablePlay.id"/>
-        </TabPanel>
+          </TabPanel>
 
-        <TabPanel header="Фотографии спектакли">
-        </TabPanel>
+          <TabPanel header="Фотографии спектаклей">
+          </TabPanel>
 
-        <TabPanel header="Даты спектакли">
-        </TabPanel>
+          <TabPanel header="Даты спектаклей">
+          </TabPanel>
 
-        <TabPanel header="Билеты спектакли ?">
-        </TabPanel>
+          <TabPanel header="Билеты спектаклей">
+          </TabPanel>
 
-      </TabView>
+        </TabView>
+
+      </div>
       <!--bg-close = false иначе при выборе значения в дроп-дауна закрывается модалка-->
 
 
