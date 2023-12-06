@@ -40,7 +40,8 @@
           <v-list-item v-for="date in pieceFull.pieceDates"
                        :key="date">
             {{ dateHelper.formatDate(date.date, 'DD.MM.YYYY') }}
-            <a uk-toggle="target: #modal-buy-ticket" @click="loadTickets(date.pieceId, date.id)"
+            <a uk-toggle="target: #modal-buy-ticket"
+               @click="loadTickets(date.pieceId, date.id, dateHelper.formatDate(date.date, 'DD.MM.YYYY'))"
                style="color: #708090">
               <span class="pi pi-shopping-cart" style="font-size: 1.5rem"></span>
             </a>
@@ -102,7 +103,7 @@
 
   <!-- Модальное окно покупки билета -->
   <div id="modal-buy-ticket" uk-modal ref="modal-edit" bg-close="false">
-    <BookTicket :tickets="tickets"></BookTicket>
+    <BookTicket :tickets="tickets" :date = "date"></BookTicket>
   </div>
 
 </template>
@@ -137,6 +138,7 @@ export default {
       userReviewFilter: new UserReviewFilter(),
       errors: [],
       o: [],
+      date: null,
       tickets: {
         cols: 0,
         rows: 0,
@@ -180,7 +182,7 @@ export default {
           });
     },
 
-    loadTickets(pieceId, dateId) {
+    loadTickets(pieceId, dateId, date) {
       let config = {
         method: 'get',
         url: 'ticket/' + pieceId + '/date/' + dateId,
@@ -189,6 +191,7 @@ export default {
       this.axios(config)
           .then((response) => {
             this.tickets = response.data;
+            this.date = date;
           })
           .catch(function (error) {
             const toast = useToast();

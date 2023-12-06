@@ -15,13 +15,13 @@
         </span>
 
         <span class="p-float-label" id="test">
-            <Password v-model="user.password" inputId="password" weakLabel="ПРостой" mediumLabel="Средний" strongLabel="Высокий">
+            <Password v-model="user.password" inputId="password" weakLabel="Простой" mediumLabel="Средний" strongLabel="Высокий">
                <template #footer>
                     <Divider/>
                     <p class="mt-2">Требования:</p>
                     <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
                       <li>Один символ в нижнем регистре</li>
-                      <li>Один символо в верхнем регистре</li>
+                      <li>Один символ в верхнем регистре</li>
                       <li>Одна цифра</li>
                       <li>Минимум 8 цифр</li>
                     </ul>
