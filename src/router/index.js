@@ -50,6 +50,10 @@ const router = createRouter({
       component: Profile
     },
     {
+      path: '/profile/me',
+      component: Profile
+    },
+    {
       path: '/spectacle/:id',
       component: Spectacle
     },
@@ -63,7 +67,7 @@ const router = createRouter({
     },
     {
       path: '/login',
-      component: Login,
+      component: HomeView,
       meta: {
         authName: idsrvAuth.authName
       },

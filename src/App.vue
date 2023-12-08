@@ -45,19 +45,15 @@ export default {
     yandexMap,
     ymapMarker
   },
-  methods: {
-    logOut() {
-      this.$store.dispatch('auth/logout');
-      this.$router.push('/login');
-    },
-  },
   computed: {
-    currentUser() {
+    isAuthenticated() {
       return this.$oidc.isAuthenticated;
     },
+    userClaims(){
+      return  typeof this.$oidc.userProfile === 'undefined' ? null : this.$oidc.userProfile;
+    }
   },
   mounted() {
-    this.userId = localStorage.getItem('id');
     this.items = [
       {
         label: 'Главная',
@@ -66,25 +62,24 @@ export default {
       {
         label: 'Регистрация',
         to: "/register",
-        visible: () => !this.currentUser,
+        visible: () => !this.isAuthenticated,
       },
       {
         label: 'Войти',
         to: "/login",
-        visible: () => !this.currentUser,
+        visible: () => !this.isAuthenticated,
       },
       {
         label: 'Профиль',
-        visible: () => this.currentUser,
+        visible: () => this.isAuthenticated,
         items: [
           {
             label: 'Перейти к профилю',
-            //command: () => this.$router.push('/profile/' + this.userId)
-            to: '/profile/' + this.userId,
+            to: '/profile/me'
           },
           {
             label: 'Админка',
-            command: () => this.$router.push('/admin/')
+            to: '/admin/'
           },
           {
             label: 'Выйти',
@@ -96,7 +91,6 @@ export default {
   },
   data() {
     return {
-      userId: null,
       items: [],
       map: null,
       coords: [47.237235, 39.712282],
