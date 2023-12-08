@@ -125,7 +125,6 @@ export default {
     },
 
     getGenreList: function () {
-      console.log('Асалам алейкум');
       let config = {
         method: 'get',
         url: '/genre/all',

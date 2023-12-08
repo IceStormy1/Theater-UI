@@ -1,16 +1,22 @@
-import axios  from "axios";
+import axios from "axios";
+import idsrvAuth from './idsrvAuth'
 
-axios.defaults.baseURL = 'http://localhost:5000/api/';
-axios.interceptors.request.use(
-    config => {
-        const user = localStorage.getItem('user');
+class AxiosConfig{
+    configure(){
+        axios.defaults.baseURL = 'http://localhost:5000/api/';
 
-        if (user) {
-            let accessToken = JSON.parse(user).accessToken;
+        axios.interceptors.request.use(
+            config => {
+                if (idsrvAuth.isAuthenticated) {
+                    let accessToken = idsrvAuth.accessToken;
 
-            config.headers.Authorization = `Bearer ${accessToken}`;
-        }
-        return config;
-    },
-    error => Promise.reject(error)
-);
+                    config.headers.Authorization = `Bearer ${accessToken}`;
+                }
+                return config;
+            },
+            error => Promise.reject(error)
+        );
+    }
+}
+
+export default new AxiosConfig();

@@ -53,7 +53,7 @@ export default {
   },
   computed: {
     currentUser() {
-      return this.$store.state.auth.user != null;
+      return this.$oidc.isAuthenticated;
     },
   },
   mounted() {
@@ -88,7 +88,7 @@ export default {
           },
           {
             label: 'Выйти',
-            command: () => this.logOut(),
+            command: () => this.$oidc.signOut(),
           },
         ]
       },

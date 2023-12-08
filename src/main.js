@@ -30,7 +30,7 @@ const vuetify = createVuetify({
     directives,
 })
 
-import './axios';
+import Axios from "./axios";
 
 library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt);
 
@@ -45,15 +45,25 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import Vuex from "vuex";
 
+import idsrvAuth from './idsrvAuth'
 
-createApp(App)
-    .component('font-awesome-icon', FontAwesomeIcon)
-    .component('BookTicket', BookTicket)
-    .use(router)
-    .use(store)
-    .use(PrimeVue)
-    .use(Toast)
-    .use(Vuex)
-    .use(vuetify)
-    .use(VueAxios, axios)
-    .mount("#app");
+idsrvAuth.startup().then(ok => {
+    if (ok) {
+        Axios.configure();
+        const app = createApp(App);
+        app.component('font-awesome-icon', FontAwesomeIcon)
+            .component('BookTicket', BookTicket)
+            .use(router)
+            .use(store)
+            .use(PrimeVue)
+            .use(Toast)
+            .use(Vuex)
+            .use(vuetify)
+            .use(VueAxios, axios)
+            .mount("#app");
+
+        app.config.globalProperties.$oidc = idsrvAuth
+    } else {
+        console.log('Startup was not ok')
+    }
+})
