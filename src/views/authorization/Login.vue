@@ -75,11 +75,7 @@ export default {
     Button,
     InputText,
   },
-  computed: {
-    loggedIn() {
-      return localStorage.getItem('user') !== null;
-    }
-  },
+
   methods: {
     loginVk(){
       window.open('https://oauth.vk.com/authorize?client_id=51667378&redirect_url=http://127.0.0.1:5173/login&display=page&response_type=code', '_blank', 'popup');

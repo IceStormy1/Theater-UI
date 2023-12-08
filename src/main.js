@@ -3,7 +3,6 @@ import App from "./App.vue";
 
 import PrimeVue from 'primevue/config'; // here
 import router from "./router";
-import store from './auth';
 
 import "primevue/resources/themes/saga-blue/theme.css"; //theme
 import "primevue/resources/primevue.min.css"; //core CSS
@@ -25,14 +24,7 @@ import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 
-const vuetify = createVuetify({
-    components,
-    directives,
-})
-
-import './axios';
-
-library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt);
+import Axios from "./axios";
 
 import 'uikit/dist/css/uikit.min.css';
 import BookTicket from "../src/components/BookTicket.vue";
@@ -43,17 +35,30 @@ import 'uikit';
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import Vuex from "vuex";
 
+import idsrvAuth from './idsrvAuth'
 
-createApp(App)
-    .component('font-awesome-icon', FontAwesomeIcon)
-    .component('BookTicket', BookTicket)
-    .use(router)
-    .use(store)
-    .use(PrimeVue)
-    .use(Toast)
-    .use(Vuex)
-    .use(vuetify)
-    .use(VueAxios, axios)
-    .mount("#app");
+const vuetify = createVuetify({
+    components,
+    directives,
+})
+
+library.add(faHome, faUser, faUserPlus, faSignInAlt, faSignOutAlt);
+
+idsrvAuth.startup().then(ok => {
+    if (ok) {
+        Axios.configure();
+        const app = createApp(App);
+        app.config.globalProperties.$oidc = idsrvAuth
+        app.component('font-awesome-icon', FontAwesomeIcon)
+            .component('BookTicket', BookTicket)
+            .use(router)
+            .use(PrimeVue)
+            .use(Toast)
+            .use(vuetify)
+            .use(VueAxios, axios)
+            .mount("#app");
+    } else {
+        console.log('Startup was not ok')
+    }
+})

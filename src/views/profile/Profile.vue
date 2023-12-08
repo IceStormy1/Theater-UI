@@ -376,7 +376,7 @@ export default {
     loadUser() {
       let config = {
         method: 'get',
-        url: 'account/user/' + this.userIdFromRoute,
+        url: 'account/' + (this.userIdFromRoute == null ? 'me' : 'user/' + this.userIdFromRoute)
       };
 
       this.axios(config)
@@ -410,9 +410,7 @@ export default {
     },
 
     isCurrentUserOpened(){
-      let userIdFromLocalStorage = localStorage.getItem('id');
-
-      return userIdFromLocalStorage === this.userIdFromRoute;
+      return this.userIdFromRoute == null;
     },
 
     loadUserTickets(){
@@ -420,7 +418,7 @@ export default {
       if(!this.isCurrentUserOpened())
         return;
 
-      this.ticketFilter.userId = this.userIdFromRoute;
+      this.ticketFilter.userId = this.currentUser.id;
 
       let config = {
         method: 'get',
@@ -438,7 +436,7 @@ export default {
     },
 
     loadUserReviews(){
-      this.userReviewFilter.userId = this.userIdFromRoute;
+      this.userReviewFilter.userId = this.currentUser.id;
 
       let config = {
         method: 'get',
